@@ -69,7 +69,7 @@ export default function Footer() {
               </li>
               <li><Link to="/changelog" className="hover:text-brand-500 transition-colors">Changelog & Releases</Link></li>
               <li><a href="https://github.com/Volta-Jebaprashanth/selenium-mcp/issues" target="_blank" rel="noreferrer" className="hover:text-brand-500 transition-colors">Report Issue / Request Tool</a></li>
-              <li><a href="https://github.com/Volta-Jebaprashanth/selenium-mcp/blob/main/LICENSE" target="_blank" rel="noreferrer" className="hover:text-brand-500 transition-colors">License Agreement</a></li>
+              <li><a href="https://github.com/Volta-Jebaprashanth/selenium-mcp/blob/main/LICENSE.md" target="_blank" rel="noreferrer" className="hover:text-brand-500 transition-colors">License Agreement</a></li>
             </ul>
           </div>
         </div>
