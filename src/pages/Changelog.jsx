@@ -4,37 +4,21 @@ import { Terminal, Github, ExternalLink, Sparkles, ShieldCheck, Tag, CheckCircle
 export default function Changelog() {
   const releases = [
     {
-      version: 'v1.2.0',
+      version: 'v1.0.0',
       date: '2026-08-01',
-      title: 'CDP Superpowers & Network Interception Engine',
+      title: 'Initial Release & Full Feature Set',
       latest: true,
       changes: [
+        'Initial public release of selenium-mcp server.',
         'Added Chrome DevTools Protocol (CDP) support via Selenium 4 DevTools API.',
         'Introduced NetworkTools category: startNetworkCapture, mockResponse, blockRequests, setNetworkConditions.',
         'Added startConsoleCapture and getConsoleLogs for JS browser console monitoring.',
         'Added standalone ApiTools HTTP client (httpGet, httpPost, httpPut, httpDelete, httpPatch).',
-        'Improved getPageElementsFiltered ancestor chain calculation for complex shadow DOM components.'
-      ]
-    },
-    {
-      version: 'v1.1.0',
-      date: '2026-07-15',
-      title: 'Flagship Structured Discovery & Performance Tuning',
-      changes: [
         'Added flagship getPageElementsFiltered tool with configurable depth capping and sibling indexing.',
         'Added automated WebDriverManager driver caching for Chrome, Edge, and Firefox.',
         'Enforced zero-stdout logging policy with rotating log file appender to guarantee stdio stream safety.',
-        'Added Spring AI 1.0.0 MCP server starter integration.'
-      ]
-    },
-    {
-      version: 'v1.0.0',
-      date: '2026-06-20',
-      title: 'Initial Open Source Release',
-      changes: [
-        'Initial public release of selenium-mcp server.',
-        'Core BrowserTools, ElementQueryTools, WaitTools, AlertTools, FrameTools, WindowTools, and CookieTools.',
         'Full support for stdio JSON-RPC protocol transport.',
+        'Spring AI 1.0.0 MCP server starter integration.',
         'MIT open source license.'
       ]
     }
@@ -58,7 +42,7 @@ export default function Changelog() {
           </div>
 
           <a
-            href="https://github.com/xpathy/selenium-mcp/releases"
+            href="https://github.com/Volta-Jebaprashanth/selenium-mcp/releases"
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-white text-white dark:text-zinc-900 text-xs font-medium transition-colors self-start sm:self-auto"

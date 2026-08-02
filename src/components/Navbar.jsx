@@ -73,17 +73,13 @@ export default function Navbar() {
 
             {/* GitHub Link */}
             <a
-              href="https://github.com/xpathy/selenium-mcp"
+              href="https://github.com/Volta-Jebaprashanth/selenium-mcp"
               target="_blank"
               rel="noreferrer"
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-white text-white dark:text-zinc-900 font-medium text-xs transition-colors"
             >
               <Github className="w-4 h-4" />
               <span className="hidden sm:inline">GitHub</span>
-              <span className="flex items-center text-[10px] bg-zinc-800 dark:bg-zinc-200 text-zinc-300 dark:text-zinc-800 px-1.5 py-0.5 rounded font-mono ml-0.5">
-                <Star className="w-2.5 h-2.5 fill-amber-400 text-amber-400 mr-0.5" />
-                124
-              </span>
             </a>
 
             {/* Light/Dark Toggle */}

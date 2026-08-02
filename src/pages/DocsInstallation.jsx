@@ -140,7 +140,7 @@ export default function DocsInstallation() {
               Download the standalone executable JAR from the GitHub releases page.
             </p>
             <a
-              href="https://github.com/xpathy/selenium-mcp/releases/latest"
+              href="https://github.com/Volta-Jebaprashanth/selenium-mcp/releases/latest"
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-500 hover:bg-brand-600 text-white font-semibold text-xs transition-colors"
@@ -163,7 +163,7 @@ export default function DocsInstallation() {
             </h3>
             <CodeBlock
               language="bash"
-              code={`git clone https://github.com/xpathy/selenium-mcp.git
+              code={`git clone https://github.com/Volta-Jebaprashanth/selenium-mcp.git
 cd selenium-mcp
 mvn clean package
 # Artifact generated at: target/selenium-mcp.jar`}
