@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layers, Terminal, Cpu, ShieldCheck, CheckCircle2, AlertTriangle, ArrowDown } from 'lucide-react';
+import { Layers, Terminal, Cpu, ShieldCheck, CheckCircle2, AlertTriangle, ArrowDown, FileCode, Globe, Sparkles } from 'lucide-react';
 import CodeBlock from '../components/CodeBlock';
 
 export default function DocsArchitecture() {
@@ -14,14 +14,53 @@ export default function DocsArchitecture() {
           System Architecture & Internals
         </h1>
         <p className="text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
-          How selenium-mcp decouples MCP protocols, Selenium WebDriver execution, and REST automation.
+          How selenium-mcp connects AI agents to the Java ecosystem for building production UI + API test automation scripts.
         </p>
       </div>
+
+      {/* AGENT TEST SCRIPT GENERATION FLOW */}
+      <section className="space-y-6">
+        <h2 className="text-xl font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+          <FileCode className="w-5 h-5 text-brand-500" /> AI Agent Script Authoring Architecture (UI + API)
+        </h2>
+        <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+          selenium-mcp bridges the gap between LLM coding agents and Java test repositories. Rather than blind static code generation, agents execute live UI/API inspection tools to write verified, executable Java test suites.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
+          <div className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 space-y-2">
+            <div className="text-brand-500 font-bold flex items-center gap-1.5">
+              <Sparkles className="w-4 h-4" /> 1. Live Inspection
+            </div>
+            <p className="font-sans text-zinc-600 dark:text-zinc-400 text-[11px]">
+              Agent calls <code className="text-brand-500">getPageElementsFiltered</code> and <code className="text-brand-500">ApiTools</code> to capture live DOM locators with ancestor trees and test API endpoints.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 space-y-2">
+            <div className="text-emerald-500 font-bold flex items-center gap-1.5">
+              <FileCode className="w-4 h-4" /> 2. Java Code Generation
+            </div>
+            <p className="font-sans text-zinc-600 dark:text-zinc-400 text-[11px]">
+              Agent outputs standard Java classes (Page Object Model + <code className="text-emerald-400">@FindBy</code> + RestAssured + TestNG/JUnit 5) directly into your Maven/Gradle repo.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 space-y-2">
+            <div className="text-amber-500 font-bold flex items-center gap-1.5">
+              <ShieldCheck className="w-4 h-4" /> 3. Verification & Healing
+            </div>
+            <p className="font-sans text-zinc-600 dark:text-zinc-400 text-[11px]">
+              Agent monitors CDP logs and test run outputs to automatically repair broken locators and API payload changes.
+            </p>
+          </div>
+        </div>
+      </section>
 
       {/* 3-Layer Visual Diagram */}
       <section className="space-y-6">
         <h2 className="text-xl font-bold text-zinc-900 dark:text-white">
-          3-Layer Stack Architecture
+          3-Layer Core Server Stack Architecture
         </h2>
 
         <div className="space-y-4 font-mono">

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { 
-  Sparkles, Check, Copy, ArrowRight, Activity, Terminal, Globe, MousePointer, ShieldCheck, Zap 
+  Sparkles, Check, Copy, ArrowRight, Activity, Terminal, Globe, MousePointer, ShieldCheck, Zap, FileCode, RefreshCw
 } from 'lucide-react';
 
 export default function UseCases() {
@@ -8,46 +8,46 @@ export default function UseCases() {
 
   const useCasesList = [
     {
-      title: 'Reliable Element Discovery & Locator Generation',
-      prompt: 'Open Chrome, navigate to https://app.example.com/login, and find every <input> field on the page with a CSS locator I can use reliably in my tests.',
-      explanation: 'Instead of dumping 50,000 characters of raw HTML, selenium-mcp inspects DOM hierarchy and returns compact element objects with exact ancestor chains and sibling indexes.',
-      toolsUsed: ['openBrowser', 'navigate', 'getPageElementsFiltered'],
-      badge: 'Flagship Tool'
+      title: 'Authoring Java Page Object Model (POM) & TestNG Suites',
+      prompt: 'Inspect https://app.example.com/checkout, extract all form input locators using getPageElementsFiltered, and generate a modular Java Page Object class with @FindBy annotations and a TestNG @Test execution method.',
+      explanation: 'The agent uses selenium-mcp to discover precise DOM hierarchy, then authors production-grade Java Page Object Model classes directly in your Maven or Gradle repository.',
+      toolsUsed: ['openBrowser', 'navigate', 'getPageElementsFiltered', 'FileTools'],
+      badge: 'Java Script Generation'
     },
     {
-      title: 'Automated Login, Page Load Verification & Visual Screenshot',
-      prompt: 'Log into the staging environment using username "qa_admin" and password "secret123", wait for the dashboard page load, and capture a full viewport screenshot.',
-      explanation: 'Performs form fill, clicks submit button, waits explicitly for document ready state, and saves a high-res screenshot artifact.',
-      toolsUsed: ['sendKeys', 'click', 'waitForPageLoad', 'takeScreenshot'],
-      badge: 'Core UI Automation'
-    },
-    {
-      title: 'Network Idle Synchronization & JS Error Console Auditing',
-      prompt: 'Fill out the multi-step checkout form, wait until all background HTTP network requests go idle, and check the browser console for any uncaught JS errors.',
-      explanation: 'Uses Selenium 4 DevTools Protocol (CDP) to monitor pending in-flight requests and audit console log errors.',
-      toolsUsed: ['sendKeys', 'click', 'waitForNetworkIdle', 'startConsoleCapture', 'getConsoleLogs'],
-      badge: 'CDP Superpowers'
-    },
-    {
-      title: 'API Request Mocking & Edge-Case UI Verification',
-      prompt: 'Mock the /api/v1/cart endpoint to return a 200 OK response with an empty items array [], then reload the page and verify the UI displays the empty cart state.',
-      explanation: 'Intercepts HTTP traffic at the DevTools network layer to test UI edge cases without modifying backend database state.',
-      toolsUsed: ['mockResponse', 'refresh', 'getText'],
-      badge: 'CDP Traffic Intercept'
-    },
-    {
-      title: 'Combined UI + API Test Workflow (Database Seeding)',
-      prompt: 'Send a POST request to /api/users to seed a new test user account, then open Chrome and log in with those newly created credentials.',
-      explanation: 'Demonstrates combined API seeding and browser UI testing in a single unified AI conversation turn.',
-      toolsUsed: ['ApiTools.httpPost', 'openBrowser', 'navigate', 'sendKeys', 'click'],
+      title: 'Combined UI + API Test Automation (RestAssured Seeding)',
+      prompt: 'Send a POST request via ApiTools to /api/v1/users to seed a test admin account, then launch Chrome, fill the UI login form with those credentials, and verify dashboard authorization in Java.',
+      explanation: 'Demonstrates end-to-end hybrid UI + API testing. The agent seeds backend state via REST API and executes browser UI validation in a single continuous workflow.',
+      toolsUsed: ['httpPost', 'openBrowser', 'navigate', 'sendKeys', 'click', 'waitForPageLoad'],
       badge: 'UI + API Combined'
     },
     {
-      title: 'Ad & Tracking Network Blocking for Flake-Free Tests',
-      prompt: 'Block all network requests to third-party ad and tracking domains (*google-analytics.com*, *doubleclick.net*) before navigating through the checkout workflow.',
-      explanation: 'Prevents slow external ad scripts or analytics trackers from causing test timeouts or unexpected DOM shifts.',
-      toolsUsed: ['blockRequests', 'navigate', 'click'],
-      badge: 'CDP Network Blocking'
+      title: 'Self-Healing Broken Selenium Java Locators',
+      prompt: 'Run our existing CheckoutTest.java class. If an element locator fails due to a recent DOM redesign, inspect the live browser state, discover the updated CSS/XPath selector, and refactor the Java test file.',
+      explanation: 'Empowers agents to automatically detect broken Selenium locators, analyze live page changes via depth-capped JSON trees, and patch existing Java test code without human intervention.',
+      toolsUsed: ['getPageElementsFiltered', 'startConsoleCapture', 'getConsoleLogs'],
+      badge: 'Self-Healing Test Suite'
+    },
+    {
+      title: 'CDP Network Intercept & Mocking for Edge-Case Automation',
+      prompt: 'Mock the /api/v1/payment-status endpoint to return a 500 Internal Error, click the checkout submit button, and generate a Java test method that asserts error handling UI behavior.',
+      explanation: 'Intercepts HTTP traffic at the Chrome DevTools Protocol (CDP) layer to generate robust Java test cases for hard-to-reproduce backend failure modes.',
+      toolsUsed: ['mockResponse', 'click', 'getText', 'clearMockResponses'],
+      badge: 'CDP Network Mocking'
+    },
+    {
+      title: 'Ad & Analytics Blocking for Flake-Free Java Execution',
+      prompt: 'Block third-party tracker requests (*analytics.google.com*, *facebook.net*) during browser execution, then record network idle timings to output robust WebDriverWait timeouts in Java.',
+      explanation: 'Filters out slow external scripts to ensure generated Java Selenium tests run fast, deterministically, and without unexpected dynamic element shifts.',
+      toolsUsed: ['blockRequests', 'waitForNetworkIdle', 'navigate'],
+      badge: 'CDP Flake Reduction'
+    },
+    {
+      title: 'Multi-Tab & Popup Verification Script Generation',
+      prompt: 'Click the "Export Report PDF" button, switch context to the newly opened popup window, verify its URL and heading, and output a clean Java Selenium WindowHandle helper method.',
+      explanation: 'Navigates multi-window workflows and generates clean Java helper utilities for managing browser tabs and alert dialogs.',
+      toolsUsed: ['click', 'getWindowHandles', 'switchToWindow', 'getTitle'],
+      badge: 'Multi-Window Java Utility'
     }
   ];
 
@@ -62,13 +62,13 @@ export default function UseCases() {
       {/* Header */}
       <div className="space-y-3 border-b border-zinc-200 dark:border-zinc-800 pb-8">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/10 text-brand-600 dark:text-brand-400 text-xs font-mono font-medium">
-          <Sparkles className="w-3.5 h-3.5" /> Example Prompts & Workflows
+          <Sparkles className="w-3.5 h-3.5" /> Example Agent Prompts & Java Automation Workflows
         </div>
         <h1 className="text-3xl sm:text-4xl font-extrabold text-zinc-900 dark:text-white">
-          Real-World AI Agent Workflows
+          Real-World AI Agent Workflows for Java QA
         </h1>
         <p className="text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
-          See how AI coding assistants like Claude Desktop, Cursor, and Windsurf leverage selenium-mcp to automate complex browser and API testing tasks.
+          See how AI coding assistants like Claude Desktop, Cursor, and Windsurf leverage <strong className="text-zinc-900 dark:text-white">selenium-mcp</strong> to inspect live applications, call REST APIs, and author production-grade Java automation scripts (Selenium, RestAssured, TestNG, JUnit 5).
         </p>
       </div>
 
@@ -95,7 +95,7 @@ export default function UseCases() {
               <div className="p-4 rounded-xl bg-zinc-950 text-zinc-100 border border-zinc-800 space-y-2 relative group font-mono text-xs">
                 <div className="flex items-center justify-between text-[11px] text-zinc-400 border-b border-zinc-800/80 pb-2">
                   <span className="flex items-center gap-1.5 text-brand-400 font-semibold">
-                    <Terminal className="w-3.5 h-3.5" /> Sample Prompt
+                    <Terminal className="w-3.5 h-3.5" /> Sample Agent Prompt
                   </span>
                   <button
                     onClick={() => handleCopyPrompt(uc.prompt, idx)}
@@ -146,3 +146,4 @@ export default function UseCases() {
     </div>
   );
 }
+

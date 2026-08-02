@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Terminal, Sparkles, ArrowRight, ShieldCheck, Zap, Layers, 
-  CheckCircle2, XCircle, Code2, Globe, Cpu, Search, Check, Copy, Activity, MousePointer 
+  CheckCircle2, XCircle, Code2, Globe, Cpu, Search, Check, Copy, Activity, MousePointer,
+  FileCode, Play, RefreshCw, Server
 } from 'lucide-react';
 import { COMPARISON_MATRIX } from '../data/toolsData';
 
 export default function Home() {
-  const [activeDemoTab, setActiveDemoTab] = useState('structured');
+  const [activeDemoTab, setActiveDemoTab] = useState('agent-workflow');
   const [copiedConfig, setCopiedConfig] = useState(false);
 
   const sampleConfig = `{
@@ -38,15 +39,15 @@ export default function Home() {
             <div className="lg:col-span-7 space-y-6">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-brand-500/30 bg-brand-500/10 text-brand-600 dark:text-brand-400 text-xs font-mono font-medium animate-pulse-subtle">
                 <Sparkles className="w-3.5 h-3.5 text-brand-500" />
-                <span>Playwright-MCP-style structured discovery for Java & Selenium</span>
+                <span>AI Agent Driven Test Automation for Java (UI + API)</span>
               </div>
 
               <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.1]">
-                Give your AI agent eyes on the browser — <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-500 via-orange-500 to-amber-500">without drowning it in HTML.</span>
+                Build Production-Grade <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-500 via-orange-500 to-amber-500">Java Test Automation Scripts</span> with AI Agents.
               </h1>
 
               <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-300 leading-relaxed max-w-2xl">
-                <strong className="text-zinc-900 dark:text-white font-semibold">selenium-mcp</strong> is a Java-based Model Context Protocol server (Spring Boot + Spring AI) that enables Claude, Cursor, and AI coding assistants to drive Chrome, Firefox, and Edge through Selenium WebDriver — with token-efficient structured JSON element trees instead of raw page-source dumps.
+                <strong className="text-zinc-900 dark:text-white font-semibold">selenium-mcp</strong> is a Java-based Model Context Protocol server (Spring Boot + Spring AI) that empowers Claude, Cursor, Windsurf, and custom AI agents to inspect UIs, call REST APIs, and automatically author, run, and self-heal robust Java test suites (Selenium WebDriver, RestAssured, TestNG / JUnit 5).
               </p>
 
               {/* CTAs */}
@@ -70,10 +71,10 @@ export default function Home() {
 
               {/* Quick stats pills */}
               <div className="pt-6 border-t border-zinc-200 dark:border-zinc-800/80 flex flex-wrap items-center gap-6 text-xs text-zinc-500 dark:text-zinc-400 font-mono">
-                <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-brand-500" /> ~90 Selenium Tools</span>
-                <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-brand-500" /> Chrome, Edge, Firefox</span>
-                <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-brand-500" /> Selenium 4 CDP</span>
-                <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-brand-500" /> MIT Open Source</span>
+                <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-brand-500" /> UI + API Java Automation</span>
+                <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-brand-500" /> ~90 Selenium + API Tools</span>
+                <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-brand-500" /> TestNG & JUnit 5 POM</span>
+                <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-brand-500" /> Spring Boot + Spring AI</span>
               </div>
             </div>
 
@@ -86,74 +87,113 @@ export default function Home() {
                     <span className="w-3 h-3 rounded-full bg-rose-500/80 inline-block"></span>
                     <span className="w-3 h-3 rounded-full bg-amber-500/80 inline-block"></span>
                     <span className="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
-                    <span className="ml-2 font-mono text-zinc-400">selenium-mcp vs Raw HTML</span>
+                    <span className="ml-2 font-mono text-zinc-400">Agent Script Authoring Flow</span>
                   </div>
                   <div className="flex bg-zinc-800 p-0.5 rounded-lg text-[11px] font-mono">
                     <button
-                      onClick={() => setActiveDemoTab('structured')}
-                      className={`px-2.5 py-1 rounded-md transition-all ${
-                        activeDemoTab === 'structured' ? 'bg-brand-500 text-white font-bold' : 'text-zinc-400 hover:text-white'
+                      onClick={() => setActiveDemoTab('agent-workflow')}
+                      className={`px-2 py-1 rounded-md transition-all ${
+                        activeDemoTab === 'agent-workflow' ? 'bg-brand-500 text-white font-bold' : 'text-zinc-400 hover:text-white'
                       }`}
                     >
-                      selenium-mcp (JSON)
+                      MCP Discovery
                     </button>
                     <button
-                      onClick={() => setActiveDemoTab('raw')}
-                      className={`px-2.5 py-1 rounded-md transition-all ${
-                        activeDemoTab === 'raw' ? 'bg-rose-900/80 text-rose-200 font-bold' : 'text-zinc-400 hover:text-white'
+                      onClick={() => setActiveDemoTab('java-code')}
+                      className={`px-2 py-1 rounded-md transition-all ${
+                        activeDemoTab === 'java-code' ? 'bg-emerald-600 text-white font-bold' : 'text-zinc-400 hover:text-white'
                       }`}
                     >
-                      Standard (Raw HTML)
+                      Generated Java
+                    </button>
+                    <button
+                      onClick={() => setActiveDemoTab('self-heal')}
+                      className={`px-2 py-1 rounded-md transition-all ${
+                        activeDemoTab === 'self-heal' ? 'bg-amber-600 text-white font-bold' : 'text-zinc-400 hover:text-white'
+                      }`}
+                    >
+                      Self-Healing
                     </button>
                   </div>
                 </div>
 
                 {/* Body code visualizer */}
-                <div className="p-4 font-mono text-xs leading-relaxed min-h-[310px] flex flex-col justify-between">
-                  {activeDemoTab === 'structured' ? (
+                <div className="p-4 font-mono text-xs leading-relaxed min-h-[330px] flex flex-col justify-between">
+                  {activeDemoTab === 'agent-workflow' && (
                     <div>
                       <div className="text-emerald-400 mb-2 flex items-center gap-1.5 font-semibold">
                         <Sparkles className="w-3.5 h-3.5" />
-                        <span>getPageElementsFiltered("css", "button.login-btn")</span>
+                        <span>Step 1: Agent Inspects UI & Seeds Test Data via API</span>
                       </div>
                       <pre className="text-zinc-300 overflow-x-auto text-[11px]">
-{`[
-  {
-    "tag": "button",
-    "id": "submit-login",
-    "class": "btn btn-primary login-btn",
-    "text": "Sign In to Account",
-    "isDisplayed": true,
-    "isEnabled": true,
-    "ancestorChain": "html > body > main.container > form#login-form > div.actions",
-    "siblingIndex": 2,
-    "siblingCount": 3,
-    "exactLocator": "form#login-form > div.actions > button#submit-login"
-  }
-]`}
+{`// 1. Seed user via ApiTools
+httpPost("https://api.app.com/v1/users", {
+  "username": "qa_user",
+  "role": "ADMIN"
+})
+
+// 2. Discover resilient UI locators via getPageElementsFiltered
+getPageElementsFiltered("css", "button[type='submit']", 5, 4, true)
+-> Exact Chain: "form#login-form > div.actions > button#submit-login"`}
                       </pre>
                       <div className="mt-4 p-2.5 rounded-lg bg-brand-500/10 border border-brand-500/20 text-brand-400 text-[11px]">
-                        ✓ <strong>Result:</strong> Agent writes locator correctly on first try! <strong>320 tokens used</strong>.
+                        ✓ <strong>Agent Action:</strong> Captures exact DOM ancestors + seeds test user via API in 1 turn!
                       </div>
                     </div>
-                  ) : (
+                  )}
+
+                  {activeDemoTab === 'java-code' && (
                     <div>
-                      <div className="text-rose-400 mb-2 flex items-center gap-1.5 font-semibold">
-                        <XCircle className="w-3.5 h-3.5" />
-                        <span>getPageSource() [Raw 180,000 char dump]</span>
+                      <div className="text-emerald-400 mb-2 flex items-center gap-1.5 font-semibold">
+                        <FileCode className="w-3.5 h-3.5 text-emerald-400" />
+                        <span>Step 2: Agent Generates Java TestNG Script</span>
                       </div>
-                      <pre className="text-zinc-500 overflow-x-auto text-[10px] line-clamp-[10]">
-{`<!DOCTYPE html><html lang="en"><head><script>...</script><style>...</style></head><body><div class="header">...</div><div class="wrapper"><div class="container"><div class="row"><div class="col-md-6"><form id="login-form"><div class="form-group"><label>Email</label><input type="text"/></div><div class="form-group"><label text-muted>Password</label><input type="password"/></div><button class="btn btn-primary login-btn">Sign In</button></form></div></div>... [12,000 lines truncated]`}
+                      <pre className="text-zinc-300 overflow-x-auto text-[11px]">
+{`@Test
+public void testAdminCheckoutFlow() {
+    // RestAssured API Pre-Seeding
+    String token = RestAssured.given()
+        .contentType(ContentType.JSON)
+        .body(new UserPayload("qa_user", "ADMIN"))
+        .post("/api/v1/auth").jsonPath().get("token");
+
+    // Selenium Java UI Page Object Model Interaction
+    loginPage.open();
+    loginPage.loginWithToken(token);
+    Assert.assertTrue(dashboardPage.isDisplayed());
+}`}
                       </pre>
-                      <div className="mt-4 p-2.5 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-300 text-[11px]">
-                        ❌ <strong>Error:</strong> "element not unique, multiple matches found." <strong>42,000 tokens wasted!</strong>
+                      <div className="mt-4 p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px]">
+                        ✓ <strong>Production Ready:</strong> Clean Java code created directly in your Maven / Gradle repo!
+                      </div>
+                    </div>
+                  )}
+
+                  {activeDemoTab === 'self-heal' && (
+                    <div>
+                      <div className="text-amber-400 mb-2 flex items-center gap-1.5 font-semibold">
+                        <RefreshCw className="w-3.5 h-3.5 text-amber-400 animate-spin" />
+                        <span>Step 3: Agent Detects UI Drift & Self-Heals Java Code</span>
+                      </div>
+                      <pre className="text-zinc-300 overflow-x-auto text-[11px]">
+{`// CDP Log Alert: NoSuchElementException for 'button#submit-login'
+// Agent re-scans live DOM using getPageElementsFiltered:
+// New element locator detected: 'button[data-testid="btn-login-submit"]'
+
+// Agent automatically patches LoginPage.java:
+- @FindBy(id = "submit-login")
++ @FindBy(css = "button[data-testid='btn-login-submit']")
+  private WebElement submitButton;`}
+                      </pre>
+                      <div className="mt-4 p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[11px]">
+                        ⚡ <strong>Self-Healing:</strong> Zero broken builds when UI changes occur!
                       </div>
                     </div>
                   )}
 
                   <div className="pt-3 border-t border-zinc-800 text-[10px] text-zinc-500 flex justify-between items-center">
                     <span>Protocol: stdio (JSON-RPC)</span>
-                    <span className="text-brand-400">Token Efficiency: +94%</span>
+                    <span className="text-brand-400">Target Ecosystem: Java 17+ (Selenium + RestAssured)</span>
                   </div>
                 </div>
               </div>
@@ -166,10 +206,10 @@ export default function Home() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-12">
           <h2 className="font-mono text-xs uppercase tracking-widest text-brand-500 font-bold mb-2">
-            Why We Built selenium-mcp
+            Built for Java Test Engineering Teams
           </h2>
           <p className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-white">
-            The problem with traditional Selenium MCP servers
+            Why traditional AI tools fail at Java Selenium test script creation
           </p>
         </div>
 
@@ -180,10 +220,10 @@ export default function Home() {
               <XCircle className="w-6 h-6" />
             </div>
             <h3 className="text-xl font-bold text-zinc-900 dark:text-white">
-              The Old Way: HTML Context Bloat
+              The Old Way: Guessed Locators & Context Bloat
             </h3>
             <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-              Most Selenium MCP servers force an AI agent to dump the entire page's HTML into its context, guess at a locator, and hope for the best — then fail with <code className="bg-rose-100 dark:bg-rose-950 text-rose-600 dark:text-rose-300 px-1.5 py-0.5 rounded">"element not unique, multiple matches found"</code>. That's slow, expensive in context tokens, and incredibly flaky.
+              Standard LLMs try to write Java Selenium scripts by reading massive 200KB raw HTML page-source dumps. They guess fragile locators like <code className="bg-rose-100 dark:bg-rose-950 text-rose-600 dark:text-rose-300 px-1.5 py-0.5 rounded">/html/body/div[3]/div[2]/button</code> that fail immediately on execution. Worse, they lack unified tools to run API data setup alongside browser UI flows.
             </p>
           </div>
 
@@ -198,10 +238,10 @@ export default function Home() {
               <Sparkles className="w-6 h-6" />
             </div>
             <h3 className="text-xl font-bold text-zinc-900 dark:text-white">
-              Structured Ancestor & Sibling Discovery
+              Agent-Led UI + API Discovery & Code Generation
             </h3>
             <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-              selenium-mcp's flagship tool, <code className="text-brand-600 dark:text-brand-400 font-mono font-semibold">getPageElementsFiltered</code>, finds matching elements in a single call and returns its exact ancestor chain and sibling index — e.g. <code className="text-zinc-800 dark:text-zinc-200 font-mono text-xs">div.container &gt; form#login &gt; input:nth-of-type(2)</code> — so the agent writes locators that succeed on the first try!
+              <code className="text-brand-600 dark:text-brand-400 font-mono font-semibold">selenium-mcp</code> gives AI agents structured DOM inspection tools (<code className="text-zinc-800 dark:text-zinc-200 font-mono text-xs">getPageElementsFiltered</code>) and standalone REST tools (<code className="text-zinc-800 dark:text-zinc-200 font-mono text-xs">ApiTools</code>). The agent inspects the live app, verifies API contracts, and authors clean, modular Java Page Object Model (POM) test scripts that execute seamlessly in Maven/Gradle!
             </p>
           </div>
         </div>
@@ -211,18 +251,44 @@ export default function Home() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
           <h2 className="font-mono text-xs uppercase tracking-widest text-brand-500 font-bold">
-            Capabilities
+            Key Capabilities
           </h2>
           <p className="text-3xl font-extrabold text-zinc-900 dark:text-white">
-            Built for serious browser automation
+            Everything your agent needs to build Java automation scripts
           </p>
           <p className="text-base text-zinc-600 dark:text-zinc-400">
-            Everything your AI coding assistant needs to interact with web apps, mock traffic, and verify tests.
+            A comprehensive MCP toolkit designed for Java QA automation engineers and AI coding assistants.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Card 1 */}
+          <div className="p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 hover:border-brand-500/50 transition-all group space-y-3">
+            <div className="w-10 h-10 rounded-xl bg-brand-500/10 text-brand-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <FileCode className="w-5 h-5" />
+            </div>
+            <h3 className="font-bold text-lg text-zinc-900 dark:text-white group-hover:text-brand-500 transition-colors">
+              Java Test Script Generation
+            </h3>
+            <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+              Empower agents to generate standard Java Page Object Model (POM) classes, `@FindBy` locators, TestNG, and JUnit 5 test suites.
+            </p>
+          </div>
+
+          {/* Card 2 */}
+          <div className="p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 hover:border-brand-500/50 transition-all group space-y-3">
+            <div className="w-10 h-10 rounded-xl bg-brand-500/10 text-brand-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Globe className="w-5 h-5" />
+            </div>
+            <h3 className="font-bold text-lg text-zinc-900 dark:text-white group-hover:text-brand-500 transition-colors">
+              UI + API Unified Testing
+            </h3>
+            <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+              Combine REST API seeding (`ApiTools` / RestAssured) and browser UI actions in single unified agent execution turns.
+            </p>
+          </div>
+
+          {/* Card 3 */}
           <div className="p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 hover:border-brand-500/50 transition-all group space-y-3">
             <div className="w-10 h-10 rounded-xl bg-brand-500/10 text-brand-500 flex items-center justify-center group-hover:scale-110 transition-transform">
               <Sparkles className="w-5 h-5" />
@@ -231,72 +297,46 @@ export default function Home() {
               Structured Element Discovery
             </h3>
             <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
-              Token-efficient JSON element trees with ancestor/sibling tree context instead of unparsed raw HTML dumps.
-            </p>
-          </div>
-
-          {/* Card 2 */}
-          <div className="p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 hover:border-brand-500/50 transition-all group space-y-3">
-            <div className="w-10 h-10 rounded-xl bg-brand-500/10 text-brand-500 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <MousePointer className="w-5 h-5" />
-            </div>
-            <h3 className="font-bold text-lg text-zinc-900 dark:text-white group-hover:text-brand-500 transition-colors">
-              Full Browser Control (112 Tools)
-            </h3>
-            <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
-              Complete coverage across navigation, explicit waits, alerts, iframes, tabs, cookies, screenshots, dropdowns, and file upload.
-            </p>
-          </div>
-
-          {/* Card 3 */}
-          <div className="p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 hover:border-brand-500/50 transition-all group space-y-3">
-            <div className="w-10 h-10 rounded-xl bg-brand-500/10 text-brand-500 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Activity className="w-5 h-5" />
-            </div>
-            <h3 className="font-bold text-lg text-zinc-900 dark:text-white group-hover:text-brand-500 transition-colors">
-              CDP Superpowers (Chrome/Edge)
-            </h3>
-            <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
-              Passive network capture, request mocking & blocking, network throttling emulation, and browser console log monitoring via Selenium 4 DevTools.
+              Token-efficient DOM inspection returning exact ancestor chains so agents discover resilient CSS & XPath locators on the first attempt.
             </p>
           </div>
 
           {/* Card 4 */}
           <div className="p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 hover:border-brand-500/50 transition-all group space-y-3">
             <div className="w-10 h-10 rounded-xl bg-brand-500/10 text-brand-500 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Globe className="w-5 h-5" />
+              <RefreshCw className="w-5 h-5" />
             </div>
             <h3 className="font-bold text-lg text-zinc-900 dark:text-white group-hover:text-brand-500 transition-colors">
-              Standalone REST Client
+              Self-Healing Test Maintenance
             </h3>
             <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
-              Hit REST APIs directly (GET/POST/PUT/PATCH/DELETE) in the same AI workflow as browser UI automation for combined E2E testing.
+              When UI layouts update, the agent inspects live DOM deltas and refactors failing Selenium Java locators automatically.
             </p>
           </div>
 
           {/* Card 5 */}
           <div className="p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 hover:border-brand-500/50 transition-all group space-y-3">
             <div className="w-10 h-10 rounded-xl bg-brand-500/10 text-brand-500 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Cpu className="w-5 h-5" />
+              <Activity className="w-5 h-5" />
             </div>
             <h3 className="font-bold text-lg text-zinc-900 dark:text-white group-hover:text-brand-500 transition-colors">
-              Multi-Browser & Auto Drivers
+              CDP DevTools Superpowers
             </h3>
             <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
-              Chrome, Firefox, and Edge supported out of the box with zero manual driver downloads thanks to integrated WebDriverManager.
+              Passive network capture, request mocking & blocking, network throttling emulation, and browser console log monitoring via Selenium 4 CDP.
             </p>
           </div>
 
           {/* Card 6 */}
           <div className="p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 hover:border-brand-500/50 transition-all group space-y-3">
             <div className="w-10 h-10 rounded-xl bg-brand-500/10 text-brand-500 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Layers className="w-5 h-5" />
+              <Cpu className="w-5 h-5" />
             </div>
             <h3 className="font-bold text-lg text-zinc-900 dark:text-white group-hover:text-brand-500 transition-colors">
-              Clean 3-Layer Architecture
+              Java Ecosystem Native
             </h3>
             <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
-              The WebDriver automation layer has zero Spring/MCP dependency, making it reusable directly in standard hand-written Java test suites.
+              Spring Boot + Spring AI core, automatic driver management via WebDriverManager, zero manual browser driver installation.
             </p>
           </div>
         </div>
@@ -347,7 +387,7 @@ export default function Home() {
             </table>
           </div>
           <div className="p-4 bg-zinc-50 dark:bg-zinc-950/60 border-t border-zinc-200 dark:border-zinc-800 text-xs text-zinc-500 dark:text-zinc-400 font-mono text-center">
-            * Disclaimer: selenium-mcp is the only Selenium-based MCP server providing Playwright-MCP-style structured element discovery with exact ancestor chains.
+            * Disclaimer: selenium-mcp is the premier Java-native MCP server providing structured element discovery, API testing, and automated Java script authoring for enterprise QA.
           </div>
         </div>
       </section>
@@ -364,7 +404,7 @@ export default function Home() {
                 Connect your AI assistant in under 2 minutes
               </h2>
               <p className="text-sm text-zinc-400 leading-relaxed">
-                Add the JAR path to your Claude Desktop, Claude Code, or Cursor configuration JSON file. selenium-mcp handles stdio JSON-RPC transport automatically.
+                Add the executable JAR to your Claude Desktop, Cursor, or Windsurf configuration. selenium-mcp starts listening via stdio, enabling your AI agents to build Java automation scripts instantly.
               </p>
               <div className="pt-2">
                 <Link
@@ -400,3 +440,4 @@ export default function Home() {
     </div>
   );
 }
+
