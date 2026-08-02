@@ -123,21 +123,21 @@ export default function Home() {
                     <div>
                       <div className="text-emerald-400 mb-2 flex items-center gap-1.5 font-semibold">
                         <Sparkles className="w-3.5 h-3.5" />
-                        <span>Step 1: Agent Inspects UI & Seeds Test Data via API</span>
+                        <span>Step 1: Agent Explores UI & Tracks API Contracts (CDP)</span>
                       </div>
                       <pre className="text-zinc-300 overflow-x-auto text-[11px]">
-{`// 1. Seed user via ApiTools
-httpPost("https://api.app.com/v1/users", {
-  "username": "qa_user",
-  "role": "ADMIN"
-})
-
-// 2. Discover resilient UI locators via getPageElementsFiltered
+{`// 1. Discover resilient UI locators via getPageElementsFiltered
 getPageElementsFiltered("css", "button[type='submit']", 5, 4, true)
--> Exact Chain: "form#login-form > div.actions > button#submit-login"`}
+-> Selector Found: "form#login-form button#submit-login"
+
+// 2. Track background HTTP traffic & API contracts in real-time
+startNetworkCapture()
+// Clicking 'Submit' triggers background API request:
+-> POST https://api.app.com/v1/auth/login [Status: 200]
+-> Schema: { "username": "string", "role": "string", "token": "JWT" }`}
                       </pre>
-                      <div className="mt-4 p-2.5 rounded-lg bg-brand-500/10 border border-brand-500/20 text-brand-400 text-[11px]">
-                        ✓ <strong>Agent Action:</strong> Captures exact DOM ancestors + seeds test user via API in 1 turn!
+                      <div className="mt-4 p-2.5 rounded-lg bg-brand-500/10 border border-brand-500/20 text-brand-400 text-[11px] leading-relaxed">
+                        ✓ <strong>Agent Discovery:</strong> Scans the DOM and passively tracks network calls. After exploration, it can automate a <strong>UI Flow</strong>, <strong>API Flow</strong>, or <strong>Hybrid Flow</strong> based on your prompt.
                       </div>
                     </div>
                   )}
@@ -146,25 +146,25 @@ getPageElementsFiltered("css", "button[type='submit']", 5, 4, true)
                     <div>
                       <div className="text-emerald-400 mb-2 flex items-center gap-1.5 font-semibold">
                         <FileCode className="w-3.5 h-3.5 text-emerald-400" />
-                        <span>Step 2: Agent Generates Java TestNG Script</span>
+                        <span>Step 2: Generate UI, API, or Hybrid Java Scripts</span>
                       </div>
                       <pre className="text-zinc-300 overflow-x-auto text-[11px]">
 {`@Test
 public void testAdminCheckoutFlow() {
-    // RestAssured API Pre-Seeding
+    // 1. API Flow: Fast user pre-seeding using RestAssured
     String token = RestAssured.given()
         .contentType(ContentType.JSON)
         .body(new UserPayload("qa_user", "ADMIN"))
         .post("/api/v1/auth").jsonPath().get("token");
 
-    // Selenium Java UI Page Object Model Interaction
+    // 2. UI Flow: Web Browser automation using Page Objects
     loginPage.open();
     loginPage.loginWithToken(token);
     Assert.assertTrue(dashboardPage.isDisplayed());
 }`}
                       </pre>
-                      <div className="mt-4 p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px]">
-                        ✓ <strong>Production Ready:</strong> Clean Java code created directly in your Maven / Gradle repo!
+                      <div className="mt-4 p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] leading-relaxed">
+                        ✓ <strong>Automation Types:</strong> Generates clean Java POM code. Seamlessly supports pure UI (Selenium), pure API (RestAssured), or hybrid flows.
                       </div>
                     </div>
                   )}
