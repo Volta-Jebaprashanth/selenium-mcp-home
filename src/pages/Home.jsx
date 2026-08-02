@@ -42,12 +42,17 @@ export default function Home() {
                 <span>AI Agent Driven Test Automation for Java (UI + API)</span>
               </div>
 
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.1]">
-                Build Production-Grade <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-500 via-orange-500 to-amber-500">Java Test Automation Scripts</span> with AI Agents.
-              </h1>
+              <div className="space-y-3">
+                <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.1]">
+                  Generate Automated Test Cases in <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-500 via-orange-500 to-amber-500">Minutes, Not Hours.</span>
+                </h1>
+                <p className="text-lg sm:text-xl font-semibold text-zinc-800 dark:text-zinc-200">
+                  Build production-grade Java automation scripts with autonomous AI agents.
+                </p>
+              </div>
 
               <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-300 leading-relaxed max-w-2xl">
-                <strong className="text-zinc-900 dark:text-white font-semibold">selenium-mcp</strong> is a Java-based Model Context Protocol server (Spring Boot + Spring AI) that empowers Claude, Cursor, Windsurf, and custom AI agents to inspect UIs, call REST APIs, and automatically author, run, and self-heal robust Java test suites (Selenium WebDriver, RestAssured, TestNG / JUnit 5).
+                By combining <strong className="text-zinc-900 dark:text-white font-semibold">selenium-mcp</strong> with AI coding agents, the system automatically explores your web applications, dynamically maps UI components, tracks API endpoints, and generates high-quality test automation code (UI + API) that is ready to ship within minutes.
               </p>
 
               {/* CTAs */}
@@ -243,6 +248,51 @@ public void testAdminCheckoutFlow() {
             <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
               <code className="text-brand-600 dark:text-brand-400 font-mono font-semibold">selenium-mcp</code> gives AI agents structured DOM inspection tools (<code className="text-zinc-800 dark:text-zinc-200 font-mono text-xs">getPageElementsFiltered</code>) and standalone REST tools (<code className="text-zinc-800 dark:text-zinc-200 font-mono text-xs">ApiTools</code>). The agent inspects the live app, verifies API contracts, and authors clean, modular Java Page Object Model (POM) test scripts that execute seamlessly in Maven/Gradle!
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* IMPRESSIVE AGENT AUTOPILOT CAPABILITIES SECTION */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-500/5 to-amber-500/5 dark:from-brand-500/10 dark:to-amber-500/10 blur-3xl rounded-3xl -z-10" />
+        
+        <div className="p-8 sm:p-12 rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white/60 dark:bg-zinc-900/40 backdrop-blur-xl space-y-10">
+          <div className="text-center max-w-3xl mx-auto space-y-3">
+            <span className="px-3 py-1 rounded-full bg-brand-500/10 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 text-xs font-mono font-semibold">
+              State-of-the-Art AI Testing Autopilot
+            </span>
+            <h2 className="text-3xl font-extrabold text-zinc-900 dark:text-white">
+              Watch the Agent Explore & Generate Code in Real-Time
+            </h2>
+            <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400">
+              Unlike static code generators, our model context protocol server turns LLMs into active QA engineers that run a continuous exploration and feedback loop.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="space-y-3 border-l-2 border-brand-500 pl-4">
+              <div className="font-mono text-xs text-brand-500 dark:text-brand-400 font-bold uppercase tracking-wider">01. Auto-Exploration</div>
+              <h3 className="font-bold text-lg text-zinc-900 dark:text-white">Semantic DOM Mapping</h3>
+              <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                The agent queries selenium-mcp to scan the active page's DOM. It identifies interactive elements, retrieves clean ancestor trees, and maps out user flows without sending large, expensive raw HTML payloads to the LLM.
+              </p>
+            </div>
+
+            <div className="space-y-3 border-l-2 border-orange-500 pl-4">
+              <div className="font-mono text-xs text-orange-500 dark:text-orange-400 font-bold uppercase tracking-wider">02. Hybrid E2E Synthesis</div>
+              <h3 className="font-bold text-lg text-zinc-900 dark:text-white">Synchronized UI + API Code</h3>
+              <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                It inspects API payload structures using browser network intercepts, then writes unified Java automation scripts using RestAssured for fast background setups and Selenium WebDriver for frontend verification.
+              </p>
+            </div>
+
+            <div className="space-y-3 border-l-2 border-amber-500 pl-4">
+              <div className="font-mono text-xs text-amber-500 dark:text-amber-400 font-bold uppercase tracking-wider">03. Intelligent Self-Healing</div>
+              <h3 className="font-bold text-lg text-zinc-900 dark:text-white">Zero Broken Builds</h3>
+              <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                If a button ID changes or the structure drifts, the agent catches the error, auto-inspects the modified DOM, finds the updated element locator, patches the Page Object file directly, and verifies the build.
+              </p>
+            </div>
           </div>
         </div>
       </section>
