@@ -207,50 +207,7 @@ public void testAdminCheckoutFlow() {
         </div>
       </section>
 
-      {/* PROBLEM / SOLUTION SECTION */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <h2 className="font-mono text-xs uppercase tracking-widest text-brand-500 font-bold mb-2">
-            Built for Java Test Engineering Teams
-          </h2>
-          <p className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-white">
-            Why traditional AI tools fail at Java Selenium test script creation
-          </p>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Problem Card */}
-          <div className="p-8 rounded-2xl border border-rose-200 dark:border-rose-900/40 bg-rose-50/40 dark:bg-rose-950/20 space-y-4">
-            <div className="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-500 flex items-center justify-center">
-              <XCircle className="w-6 h-6" />
-            </div>
-            <h3 className="text-xl font-bold text-zinc-900 dark:text-white">
-              The Old Way: Guessed Locators & Context Bloat
-            </h3>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-              Standard LLMs try to write Java Selenium scripts by reading massive 200KB raw HTML page-source dumps. They guess fragile locators like <code className="bg-rose-100 dark:bg-rose-950 text-rose-600 dark:text-rose-300 px-1.5 py-0.5 rounded">/html/body/div[3]/div[2]/button</code> that fail immediately on execution. Worse, they lack unified tools to run API data setup alongside browser UI flows.
-            </p>
-          </div>
-
-          {/* Solution Card */}
-          <div className="p-8 rounded-2xl border border-brand-500/30 bg-brand-500/5 dark:bg-brand-500/10 space-y-4 relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-4">
-              <span className="px-3 py-1 rounded-full bg-brand-500 text-white font-mono text-[10px] font-bold uppercase">
-                The selenium-mcp Way
-              </span>
-            </div>
-            <div className="w-10 h-10 rounded-xl bg-brand-500/20 text-brand-500 flex items-center justify-center">
-              <Sparkles className="w-6 h-6" />
-            </div>
-            <h3 className="text-xl font-bold text-zinc-900 dark:text-white">
-              Agent-Led UI + API Discovery & Code Generation
-            </h3>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-              <code className="text-brand-600 dark:text-brand-400 font-mono font-semibold">selenium-mcp</code> gives AI agents structured DOM inspection tools (<code className="text-zinc-800 dark:text-zinc-200 font-mono text-xs">getPageElementsFiltered</code>) and standalone REST tools (<code className="text-zinc-800 dark:text-zinc-200 font-mono text-xs">ApiTools</code>). The agent inspects the live app, verifies API contracts, and authors clean, modular Java Page Object Model (POM) test scripts that execute seamlessly in Maven/Gradle!
-            </p>
-          </div>
-        </div>
-      </section>
 
       {/* IMPRESSIVE AGENT AUTOPILOT CAPABILITIES SECTION */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
