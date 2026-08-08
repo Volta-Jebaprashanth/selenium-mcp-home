@@ -40,6 +40,7 @@ export default function Footer() {
               <li><Link to="/docs/installation#claude-desktop" className="hover:text-brand-500 transition-colors">Claude Desktop Setup</Link></li>
               <li><Link to="/docs/installation#cursor" className="hover:text-brand-500 transition-colors">Cursor IDE Config</Link></li>
               <li><Link to="/docs/architecture" className="hover:text-brand-500 transition-colors">Architecture Deep Dive</Link></li>
+              <li><Link to="/articles" className="hover:text-brand-500 transition-colors">Articles & Field Notes</Link></li>
             </ul>
           </div>
 

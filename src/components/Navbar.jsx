@@ -9,13 +9,14 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
 
-  const isActive = (path) => location.pathname === path;
+  const isActive = (path) => (path === '/' ? location.pathname === '/' : location.pathname.startsWith(path));
 
   const navLinks = [
     { label: 'Installation', path: '/docs/installation' },
     { label: 'Tool Reference', path: '/docs/tools' },
     { label: 'Architecture', path: '/docs/architecture' },
     { label: 'Use Cases', path: '/use-cases' },
+    { label: 'Articles', path: '/articles' },
     { label: 'Changelog', path: '/changelog' },
   ];
 

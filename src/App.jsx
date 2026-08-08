@@ -8,6 +8,8 @@ import DocsTools from './pages/DocsTools';
 import DocsArchitecture from './pages/DocsArchitecture';
 import UseCases from './pages/UseCases';
 import Changelog from './pages/Changelog';
+import Articles from './pages/Articles';
+import ArticleDetail from './pages/ArticleDetail';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -33,6 +35,8 @@ export default function App() {
             <Route path="/docs/tools" element={<DocsTools />} />
             <Route path="/docs/architecture" element={<DocsArchitecture />} />
             <Route path="/use-cases" element={<UseCases />} />
+            <Route path="/articles" element={<Articles />} />
+            <Route path="/articles/:slug" element={<ArticleDetail />} />
             <Route path="/changelog" element={<Changelog />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
