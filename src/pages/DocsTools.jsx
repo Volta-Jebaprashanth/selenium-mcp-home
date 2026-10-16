@@ -35,6 +35,8 @@ export default function DocsTools() {
     setSearchParams(searchParams);
   };
 
+  const groupOf = (categoryId) => TOOL_CATEGORIES.find((c) => c.id === categoryId)?.group;
+
   const filteredTools = useMemo(() => {
     return ALL_TOOLS.filter((tool) => {
       const matchesCategory = selectedCategory === 'ALL' || tool.category === selectedCategory;
@@ -88,7 +90,7 @@ export default function DocsTools() {
       {/* Locator Strategy Reference Card */}
       <section className="p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/40 space-y-3">
         <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-brand-500 flex items-center gap-1.5">
-          <Globe className="w-3.5 h-3.5" /> Supported Locator Strategies (locatorStrategy)
+          <Globe className="w-3.5 h-3.5" /> Supported Locator Strategies (locatorType)
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
           {LOCATOR_STRATEGIES.map((loc) => (
@@ -102,6 +104,9 @@ export default function DocsTools() {
             </div>
           ))}
         </div>
+        <p className="text-[11px] text-zinc-500 dark:text-zinc-400 leading-relaxed">
+          <code className="font-mono">click</code>, <code className="font-mono">sendKeys</code>, <code className="font-mono">getText</code>, <code className="font-mono">getAttribute</code>, <code className="font-mono">hover</code>, <code className="font-mono">doubleClick</code>, <code className="font-mono">rightClick</code>, <code className="font-mono">scrollIntoView</code> and <code className="font-mono">takeElementScreenshot</code> also accept optional <code className="font-mono">index</code> (zero-based match to use) and <code className="font-mono">visibleOnly</code> (ignore hidden matches, applied before <code className="font-mono">index</code>).
+        </p>
       </section>
 
       {/* Category Pills Filter */}
@@ -159,6 +164,12 @@ export default function DocsTools() {
                   <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400">
                     {tool.category}
                   </span>
+                  <span
+                    title="Tool group name for --selenium.mcp.tool-groups / --selenium.mcp.exclude-tool-groups"
+                    className="text-[10px] font-mono px-2 py-0.5 rounded-full border border-zinc-200 dark:border-zinc-700 text-zinc-500 dark:text-zinc-400"
+                  >
+                    {groupOf(tool.category) ? `group: ${groupOf(tool.category)}` : 'always loaded'}
+                  </span>
                   {tool.flagship && (
                     <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-brand-500 text-white flex items-center gap-1">
                       <Sparkles className="w-3 h-3" /> Flagship Smart Discovery
@@ -190,7 +201,7 @@ export default function DocsTools() {
               </div>
 
               {/* Description */}
-              <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed">
+              <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed whitespace-pre-line">
                 {tool.description}
               </p>
 
@@ -198,6 +209,12 @@ export default function DocsTools() {
               <div className="p-3 rounded-xl bg-zinc-950 text-brand-400 font-mono text-xs overflow-x-auto border border-zinc-800">
                 <code>{tool.signature}</code>
               </div>
+
+              {tool.example && (
+                <div className="text-[11px] font-mono text-zinc-500 dark:text-zinc-400">
+                  Example: <code className="text-zinc-800 dark:text-zinc-200">{tool.example}</code>
+                </div>
+              )}
 
               {/* Parameters list if present */}
               {tool.params && tool.params.length > 0 && (
@@ -210,7 +227,9 @@ export default function DocsTools() {
                       <div key={p.name} className="p-2 rounded-lg bg-zinc-50 dark:bg-zinc-800/40 border border-zinc-200 dark:border-zinc-800 font-mono space-y-0.5">
                         <div className="flex items-center justify-between">
                           <span className="font-bold text-zinc-800 dark:text-zinc-200">{p.name}</span>
-                          <span className="text-[10px] text-brand-500 font-semibold">{p.type}</span>
+                          <span className="text-[10px] text-brand-500 font-semibold">
+                            {p.type}{p.required ? ' · required' : ''}
+                          </span>
                         </div>
                         <p className="text-[11px] text-zinc-500 dark:text-zinc-400 font-sans">{p.desc}</p>
                       </div>

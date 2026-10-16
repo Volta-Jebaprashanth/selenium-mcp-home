@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Terminal, Github, Heart, ShieldCheck, Cpu, Code2 } from 'lucide-react';
+import { Terminal, Github, Heart, ShieldCheck, Cpu, Code2, Package } from 'lucide-react';
+import { ALL_TOOLS } from '../data/toolsData';
 
 export default function Footer() {
   return (
@@ -25,7 +26,7 @@ export default function Footer() {
                 <ShieldCheck className="w-3 h-3" /> MIT License
               </span>
               <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-mono bg-brand-500/10 text-brand-600 dark:text-brand-400 border border-brand-500/20">
-                <Cpu className="w-3 h-3" /> Java 21+
+                <Package className="w-3 h-3" /> npx · Java bundled
               </span>
             </div>
           </div>
@@ -50,7 +51,7 @@ export default function Footer() {
               Reference
             </h4>
             <ul className="space-y-2.5 text-sm text-zinc-500 dark:text-zinc-400">
-              <li><Link to="/docs/tools" className="hover:text-brand-500 transition-colors">Full Tool Surface (112 Tools)</Link></li>
+              <li><Link to="/docs/tools" className="hover:text-brand-500 transition-colors">Full Tool Surface ({ALL_TOOLS.length} Tools)</Link></li>
               <li><Link to="/docs/tools?category=PageSourceTools" className="hover:text-brand-500 transition-colors">getPageElementsFiltered</Link></li>
               <li><Link to="/docs/tools?category=NetworkTools" className="hover:text-brand-500 transition-colors">CDP Network Mocking</Link></li>
               <li><Link to="/use-cases" className="hover:text-brand-500 transition-colors">Example Prompts & Workflows</Link></li>
@@ -79,7 +80,7 @@ export default function Footer() {
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-500 dark:text-zinc-500 gap-4">
           <p>© {new Date().getFullYear()} selenium-mcp project. Hosted at selenium-mcp.xpathy.uk.</p>
           <p className="flex items-center gap-1">
-            Built with Spring AI + Selenium WebDriver 4.46
+            Built with Spring AI + Selenium WebDriver 4.51
           </p>
         </div>
       </div>

@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Search, Github, Star, Menu, X, Sparkles, Terminal, BookOpen, Layers, Zap } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import QuickSearchModal from './QuickSearchModal';
+import { ALL_TOOLS } from '../data/toolsData';
 
 export default function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -108,7 +109,7 @@ export default function Navbar() {
             >
               <span className="flex items-center gap-2">
                 <Search className="w-4 h-4 text-brand-500" />
-                Search 112 MCP tools...
+                Search {ALL_TOOLS.length} MCP tools...
               </span>
               <kbd className="px-1.5 py-0.5 bg-zinc-200 dark:bg-zinc-800 text-[10px] rounded">⌘K</kbd>
             </button>

@@ -4,10 +4,29 @@ import { Terminal, Github, ExternalLink, Sparkles, ShieldCheck, Tag, CheckCircle
 export default function Changelog() {
   const releases = [
     {
-      version: 'v1.0.0',
+      version: 'v1.0.16',
+      date: '2026-10-16',
+      title: 'npx Install (No Java Required) + Everything Since v1.0.2',
+      latest: true,
+      changes: [
+        'npm distribution with a bundled Java runtime: npx -y @xpathy/selenium-mcp, no JDK install needed (Windows x64, Linux x64, macOS Intel/Apple Silicon). Published via npm trusted publishing with provenance.',
+        'The launcher repairs an npx cache that is missing its platform package.',
+        'Tool groups: --selenium.mcp.tool-groups / --selenium.mcp.exclude-tool-groups launch arguments to load fewer tools.',
+        'connectToBrowser and launchDebugBrowser: attach to a Chrome/Edge already running with remote debugging, e.g. to inspect the live page where a test failed.',
+        'takeScreenshot fullPage option for capturing the whole scrollable page (Chrome/Edge via CDP, Firefox natively).',
+        'addInitScript / removeInitScript: JavaScript that runs on every page load in the current tab (Chrome/Edge).',
+        'executeScript timeoutMs option to override the 30-second script timeout per call; objects and arrays now come back as JSON.',
+        'Optional index and visibleOnly parameters on click, sendKeys, getText, getAttribute, hover, doubleClick, rightClick, scrollIntoView and takeElementScreenshot to target the nth (visible) match.',
+        "Tool error messages are now the driver's one-line message, without Selenium's build/system/session diagnostics.",
+        'Selenium bumped to 4.51.0 (CDP for Chrome 153–155), fixing console and network capture on newer Chrome.',
+        'Opt-in headless Chrome integration test (mvn test -Dselenium.it=true).'
+      ]
+    },
+    {
+      version: 'v1.0.2',
       date: '2026-08-01',
       title: 'Initial Release & Full Feature Set',
-      latest: true,
+      latest: false,
       changes: [
         'Initial public release of selenium-mcp server.',
         'Added Chrome DevTools Protocol (CDP) support via Selenium 4 DevTools API.',
@@ -18,7 +37,7 @@ export default function Changelog() {
         'Added automated WebDriverManager driver caching for Chrome, Edge, and Firefox.',
         'Enforced zero-stdout logging policy with rotating log file appender to guarantee stdio stream safety.',
         'Full support for stdio JSON-RPC protocol transport.',
-        'Spring AI 1.0.0 MCP server starter integration.',
+        'Spring AI MCP server starter integration.',
         'MIT open source license.'
       ]
     }

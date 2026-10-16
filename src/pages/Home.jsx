@@ -5,7 +5,7 @@ import {
   CheckCircle2, XCircle, Code2, Globe, Cpu, Search, Check, Copy, Activity, MousePointer,
   FileCode, Play, RefreshCw, Server
 } from 'lucide-react';
-import { COMPARISON_MATRIX } from '../data/toolsData';
+import { COMPARISON_MATRIX, ALL_TOOLS } from '../data/toolsData';
 
 export default function Home() {
   const [activeDemoTab, setActiveDemoTab] = useState('agent-workflow');
@@ -14,8 +14,8 @@ export default function Home() {
   const sampleConfig = `{
   "mcpServers": {
     "selenium-mcp": {
-      "command": "java",
-      "args": ["-jar", "/path/to/selenium-mcp.jar"]
+      "command": "npx",
+      "args": ["-y", "@xpathy/selenium-mcp"]
     }
   }
 }`;
@@ -70,16 +70,16 @@ export default function Home() {
                   className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl border border-zinc-300 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200 hover:border-brand-500/50 font-semibold text-sm transition-all"
                 >
                   <Search className="w-4 h-4 text-brand-500" />
-                  <span>Browse 112 Tools</span>
+                  <span>Browse {ALL_TOOLS.length} Tools</span>
                 </Link>
               </div>
 
               {/* Quick stats pills */}
               <div className="pt-6 border-t border-zinc-200 dark:border-zinc-800/80 flex flex-wrap items-center gap-6 text-xs text-zinc-500 dark:text-zinc-400 font-mono">
                 <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-brand-500" /> UI + API Java Automation</span>
-                <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-brand-500" /> ~90 Selenium + API Tools</span>
+                <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-brand-500" /> {ALL_TOOLS.length} Selenium + API Tools</span>
                 <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-brand-500" /> TestNG & JUnit 5 POM</span>
-                <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-brand-500" /> Spring Boot + Spring AI</span>
+                <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-brand-500" /> One npx command, no Java install</span>
               </div>
             </div>
 
@@ -132,7 +132,7 @@ export default function Home() {
                       </div>
                       <pre className="text-zinc-300 overflow-x-auto text-[11px]">
 {`// 1. Discover resilient UI locators via getPageElementsFiltered
-getPageElementsFiltered("css", "button[type='submit']", 5, 4, true)
+getPageElementsFiltered(locatorType: "css", locatorValue: "button[type='submit']", includeAncestors: true)
 -> Selector Found: "form#login-form button#submit-login"
 
 // 2. Track background HTTP traffic & API contracts in real-time
@@ -198,7 +198,7 @@ public void testAdminCheckoutFlow() {
 
                   <div className="pt-3 border-t border-zinc-800 text-[10px] text-zinc-500 flex justify-between items-center">
                     <span>Protocol: stdio (JSON-RPC)</span>
-                    <span className="text-brand-400">Target Ecosystem: Java 17+ (Selenium + RestAssured)</span>
+                    <span className="text-brand-400">Target Ecosystem: Java (Selenium + RestAssured)</span>
                   </div>
                 </div>
               </div>
@@ -343,7 +343,7 @@ public void testAdminCheckoutFlow() {
               Java Ecosystem Native
             </h3>
             <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
-              Spring Boot + Spring AI core, automatic driver management via WebDriverManager, zero manual browser driver installation.
+              Spring Boot + Spring AI core, shipped on npm with its own Java runtime. Drivers are managed automatically by WebDriverManager, so there is nothing else to install.
             </p>
           </div>
         </div>
@@ -411,7 +411,7 @@ public void testAdminCheckoutFlow() {
                 Connect your AI assistant in under 2 minutes
               </h2>
               <p className="text-sm text-zinc-400 leading-relaxed">
-                Add the executable JAR to your Claude Desktop, Cursor, or Windsurf configuration. selenium-mcp starts listening via stdio, enabling your AI agents to build Java automation scripts instantly.
+                Paste one npx entry into Claude Code, Cursor, VS Code, or Claude Desktop. The npm package bundles its own Java runtime, so all you need is Node.js and a browser. Prefer your own JDK? The standalone jar still works.
               </p>
               <div className="pt-2">
                 <Link
@@ -427,7 +427,7 @@ public void testAdminCheckoutFlow() {
             <div className="lg:col-span-6">
               <div className="relative rounded-xl border border-zinc-800 bg-zinc-900/90 overflow-hidden font-mono text-xs">
                 <div className="flex items-center justify-between px-4 py-2 bg-zinc-800/80 border-b border-zinc-700 text-zinc-400 text-[11px]">
-                  <span>claude_desktop_config.json</span>
+                  <span>.mcp.json · claude_desktop_config.json</span>
                   <button
                     onClick={copyConfig}
                     className="flex items-center gap-1 hover:text-white transition-colors"

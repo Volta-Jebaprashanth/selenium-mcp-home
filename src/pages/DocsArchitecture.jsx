@@ -153,7 +153,7 @@ export default function DocsArchitecture() {
             Because the process's standard output stream (<code className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded">stdout</code>) <em>IS</em> the binary protocol transport channel, any unformatted log string (e.g. SLF4J, Logback, or Selenium driver noise) written to stdout will corrupt the JSON-RPC packet stream and crash the AI connection.
           </p>
           <p>
-             selenium-mcp redirects all framework and driver logging to a size-rotated log file in <code className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded">logs/selenium-mcp.log</code>. Standard error (<code className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded">stderr</code>) is reserved exclusively for unhandled fatal JVM errors.
+             selenium-mcp redirects all framework and driver logging to a size-rotated log file: <code className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded">~/.selenium-mcp/mcp-server.log</code> when launched via npx, or <code className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded">mcp-server.log</code> in the working directory when running the jar directly (override with <code className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded">--logging.file.name=...</code>). Standard error (<code className="bg-zinc-100 dark:bg-zinc-800 px-1 rounded">stderr</code>) is reserved exclusively for unhandled fatal JVM errors.
           </p>
         </div>
       </section>

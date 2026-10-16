@@ -101,7 +101,7 @@ export default function QuickSearchModal({ isOpen, onClose }) {
 
         {/* Footer info */}
         <div className="px-4 py-2.5 bg-zinc-50 dark:bg-zinc-900/50 border-t border-zinc-200 dark:border-zinc-800 text-xs text-zinc-400 flex items-center justify-between">
-          <span>Search across 112 MCP tools</span>
+          <span>Search across {ALL_TOOLS.length} MCP tools</span>
           <div className="flex items-center gap-2">
             <kbd className="px-1.5 py-0.5 bg-zinc-200 dark:bg-zinc-800 rounded text-[10px] font-mono">ESC</kbd> to close
           </div>

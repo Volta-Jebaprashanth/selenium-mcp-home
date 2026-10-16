@@ -142,7 +142,7 @@ export default function ArticleDetail() {
               Try selenium-mcp on your own Selenium suite
             </h3>
             <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-              MIT-licensed, ships as a single jar, and drops into an MCP-capable client in minutes.
+              MIT-licensed, installs with a single <code>npx</code> command (no Java install needed), and drops into an MCP-capable client in minutes.
             </p>
             <div className="flex flex-wrap gap-3 pt-1">
               <Link
