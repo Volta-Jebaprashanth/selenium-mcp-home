@@ -6,9 +6,10 @@ export default function Changelog() {
     {
       version: 'v1.0.26',
       date: '2026-10-29',
-      title: 'New npm Package: @voltajeba/selenium-mcp',
+      title: 'New npm Package & Domain: voltajeba',
       latest: true,
       changes: [
+        'The docs site moved from selenium-mcp.xpathy.uk (the old address) to selenium-mcp.voltajeba.com.',
         'The npm package is now @voltajeba/selenium-mcp, with platform packages @voltajeba/selenium-mcp-<platform>-<arch>: npx -y @voltajeba/selenium-mcp.',
         '@xpathy/selenium-mcp is still released with every version as an alias that installs and runs it, so existing configs keep working.',
         'Java packages moved from uk.xpathy.selenium.mcp to com.voltajeba.selenium.mcp (Maven groupId too). Code that uses webdriver/Tools or http/ApiClient as a library needs its imports updated.',
@@ -53,7 +54,7 @@ export default function Changelog() {
       title: 'npx Install (No Java Required) + Everything Since v1.0.2',
       latest: false,
       changes: [
-        'npm distribution with a bundled Java runtime: npx -y @xpathy/selenium-mcp, no JDK install needed (Windows x64, Linux x64, macOS Intel/Apple Silicon). Published via npm trusted publishing with provenance.',
+        'npm distribution with a bundled Java runtime: npx -y @xpathy/selenium-mcp (the old package name; now @voltajeba/selenium-mcp), no JDK install needed (Windows x64, Linux x64, macOS Intel/Apple Silicon). Published via npm trusted publishing with provenance.',
         'The launcher repairs an npx cache that is missing its platform package.',
         'Tool groups: --selenium.mcp.tool-groups / --selenium.mcp.exclude-tool-groups launch arguments to load fewer tools.',
         'connectToBrowser and launchDebugBrowser: attach to a Chrome/Edge already running with remote debugging, e.g. to inspect the live page where a test failed.',

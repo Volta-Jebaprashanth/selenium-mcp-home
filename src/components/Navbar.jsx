@@ -37,7 +37,7 @@ export default function Navbar() {
                 selenium-mcp
               </span>
               <span className="text-[10px] text-zinc-400 font-mono -mt-1">
-                .xpathy.uk
+                .voltajeba.com
               </span>
             </div>
           </Link>

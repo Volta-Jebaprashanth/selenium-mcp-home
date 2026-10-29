@@ -1,6 +1,6 @@
 # From Zero to a Working Selenium Test, Written by an AI Agent That Can Actually See the Page
 
-> **Quick context:** [selenium-mcp](https://github.com/Volta-Jebaprashanth/selenium-mcp) is a Java-based [Model Context Protocol](https://modelcontextprotocol.io) server built for test automation engineers working in **Java, Selenium, and REST Assured**. It gives an AI coding agent — Claude Code, Cursor, Claude Desktop, anything that speaks MCP — a real Selenium WebDriver session it can drive directly, with structured element discovery, CDP network/console tooling, and a standalone REST client, instead of guessing at locators from pasted HTML. Repo: [github.com/Volta-Jebaprashanth/selenium-mcp](https://github.com/Volta-Jebaprashanth/selenium-mcp) · Docs: [selenium-mcp.xpathy.uk](https://selenium-mcp.xpathy.uk/)
+> **Quick context:** [selenium-mcp](https://github.com/Volta-Jebaprashanth/selenium-mcp) is a Java-based [Model Context Protocol](https://modelcontextprotocol.io) server built for test automation engineers working in **Java, Selenium, and REST Assured**. It gives an AI coding agent — Claude Code, Cursor, Claude Desktop, anything that speaks MCP — a real Selenium WebDriver session it can drive directly, with structured element discovery, CDP network/console tooling, and a standalone REST client, instead of guessing at locators from pasted HTML. Repo: [github.com/Volta-Jebaprashanth/selenium-mcp](https://github.com/Volta-Jebaprashanth/selenium-mcp) · Docs: [selenium-mcp.voltajeba.com](https://selenium-mcp.voltajeba.com/)
 
 This one's a walkthrough, not an argument. If you're a test automation engineer curious about **selenium-mcp** but haven't tried it yet, here's exactly how to go from nothing to an AI coding assistant writing a real, passing Selenium test against a page it inspected itself.
 
@@ -35,7 +35,7 @@ A few variations, depending on where you're running it:
 - **Claude Code on native Windows** needs `npx` wrapped in `cmd /c`: `"command": "cmd", "args": ["/c", "npx", "-y", "@voltajeba/selenium-mcp"]`
 - **VS Code** (`.vscode/mcp.json`) uses `servers` as the top-level key instead of `mcpServers`; the inner `command`/`args` are the same.
 
-Restart your client, and you should see `selenium-mcp` show up as an available tool provider, with all 116 tools across 16 categories ready to call.
+Restart your client, and you should see `selenium-mcp` show up as an available tool provider, with all 123 tools across 16 categories ready to call.
 
 **The first start is the slow one.** npm installs only the platform package matching your machine (Windows x64, Linux x64, macOS Intel, or macOS Apple Silicon), but that's still around 90 MB — the Java runtime plus the server. If your client gives up waiting on that first launch, just restart the server once, or pre-download it from a terminal beforehand with `npx -y @voltajeba/selenium-mcp --version`. Every start after that is local. Logs go to `~/.selenium-mcp/mcp-server.log` if you need to see what happened.
 
@@ -45,7 +45,7 @@ Restart your client, and you should see `selenium-mcp` show up as an available t
 "args": ["-y", "@voltajeba/selenium-mcp", "--selenium.mcp.exclude-tool-groups=api,network,cookies,alerts,select,files"]
 ```
 
-That takes it from 116 tools down to 75. Core browser tools (open, navigate, click, type) are always on.
+That takes it from 123 tools down to 82. Core browser tools (open, navigate, click, type) are always on.
 
 ### Prefer running the jar on your own JDK?
 
@@ -82,4 +82,4 @@ Once the basic loop works, a few follow-ups are worth exploring in the same sess
 
 ## If something doesn't work
 
-The project is MIT-licensed and actively maintained — if a tool call behaves unexpectedly or a locator strategy you need isn't supported, [open an issue](https://github.com/Volta-Jebaprashanth/selenium-mcp/issues). The full, searchable tool reference — every parameter, every category — lives on the [docs site](https://selenium-mcp.xpathy.uk/docs/tools), worth bookmarking once you're past the first test and exploring what else is available.
+The project is MIT-licensed and actively maintained — if a tool call behaves unexpectedly or a locator strategy you need isn't supported, [open an issue](https://github.com/Volta-Jebaprashanth/selenium-mcp/issues). The full, searchable tool reference — every parameter, every category — lives on the [docs site](https://selenium-mcp.voltajeba.com/docs/tools), worth bookmarking once you're past the first test and exploring what else is available.

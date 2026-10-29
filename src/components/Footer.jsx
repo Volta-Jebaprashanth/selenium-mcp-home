@@ -78,7 +78,7 @@ export default function Footer() {
 
         {/* Sub-footer */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-500 dark:text-zinc-500 gap-4">
-          <p>© {new Date().getFullYear()} selenium-mcp project. Hosted at selenium-mcp.xpathy.uk.</p>
+          <p>© {new Date().getFullYear()} selenium-mcp project. Hosted at selenium-mcp.voltajeba.com (formerly selenium-mcp.xpathy.uk).</p>
           <p className="flex items-center gap-1">
             Built with Spring AI + Selenium WebDriver 4.51
           </p>
