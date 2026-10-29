@@ -4,10 +4,54 @@ import { Terminal, Github, ExternalLink, Sparkles, ShieldCheck, Tag, CheckCircle
 export default function Changelog() {
   const releases = [
     {
+      version: 'v1.0.26',
+      date: '2026-10-29',
+      title: 'New npm Package: @voltajeba/selenium-mcp',
+      latest: true,
+      changes: [
+        'The npm package is now @voltajeba/selenium-mcp, with platform packages @voltajeba/selenium-mcp-<platform>-<arch>: npx -y @voltajeba/selenium-mcp.',
+        '@xpathy/selenium-mcp is still released with every version as an alias that installs and runs it, so existing configs keep working.',
+        'Java packages moved from uk.xpathy.selenium.mcp to com.voltajeba.selenium.mcp (Maven groupId too). Code that uses webdriver/Tools or http/ApiClient as a library needs its imports updated.',
+        'CI retries npm publishes that hit a transparency-log 409.'
+      ]
+    },
+    {
+      version: 'v1.0.21',
+      date: '2026-10-29',
+      title: 'Wait Strategy for Generated Tests (Auto-Wait)',
+      latest: false,
+      changes: [
+        'setAutoWait / getAutoWait tools, plus implicitWaitSeconds, networkIdleMillis and animationIdleMillis on openBrowser, connectToBrowser and launchDebugBrowser. Sessions still default to plain Selenium; the server recommends networkIdleMillis=500 and animationIdleMillis=300.',
+        'With a wait strategy set, every action waits afterwards for fetch/XHR requests and then animations to settle, using an in-page tracker. Each action reports what it set off and which wait the generated test needs at that step.',
+        'Failures that a missing wait causes (no-such-element, click-intercepted, not-interactable, stale element) come with a hint saying what the test needs before that step.',
+        'getWaitReport: the steps whose generated code needs a wait. closeBrowser prints it before discarding it.',
+        'getWaitCodeSnippets: usage rules, driver setup lines and a Waits helper class (Java 11+, Selenium 4) that runs the same page checks as the session.',
+        'Server instructions sent to MCP clients on connect, describing the wait workflow.'
+      ]
+    },
+    {
+      version: 'v1.0.19',
+      date: '2026-10-23',
+      title: 'Multiple Browser Sessions & Agent-Friendly Element Tools',
+      latest: false,
+      changes: [
+        'Multiple browser sessions: openBrowser, connectToBrowser and launchDebugBrowser take an optional session name to run several browsers at once (up to --selenium.mcp.max-sessions, default 5). New listSessions and switchSession tools; closeBrowser takes session and all.',
+        'While several sessions are open, status messages and tool failures start with [session] so they say which browser they came from.',
+        'text and partialText locator strategies: find an element by the words on screen, e.g. text=Create Put, without writing XPath.',
+        'isClickable tool, and visible / enabled / clickable flags (plus coveredBy) on interactive elements in getPageElements and on every match in getPageElementsFiltered. Clickable means displayed, enabled and not covered by another element such as a loading overlay.',
+        'click retries while another element intercepts the click, up to waitIfCoveredSeconds (default 5), and reports when its target was covered. waitForClickable also waits until nothing covers the target.',
+        'index / visibleOnly on every remaining single-element tool (element state and geometry, waits, selects, uploadFile, switchToFrame, clickAndHold, dragAndDropByOffset), and visibleOnly on tools that act on every match.',
+        'takeScreenshot and takeElementScreenshot return MCP image content instead of a base64 string, so clients can show the image to the model directly.',
+        'Browsers are closed (attached ones disconnected) when the server shuts down. On Windows the npm launcher runs the server detached, so a client killing the launcher no longer orphans chromedriver and browser processes.',
+        'A browser closed by hand or crashed no longer stays "open": tools say the browser is gone, and the dead session is dropped.',
+        'Spring Boot bumped to 4.1.2. CI runs the headless Chrome integration tests on every build.'
+      ]
+    },
+    {
       version: 'v1.0.16',
       date: '2026-10-16',
       title: 'npx Install (No Java Required) + Everything Since v1.0.2',
-      latest: true,
+      latest: false,
       changes: [
         'npm distribution with a bundled Java runtime: npx -y @xpathy/selenium-mcp, no JDK install needed (Windows x64, Linux x64, macOS Intel/Apple Silicon). Published via npm trusted publishing with provenance.',
         'The launcher repairs an npx cache that is missing its platform package.',

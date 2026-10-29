@@ -1,8 +1,8 @@
 export const TOOL_CATEGORIES = [
   { id: 'PageSourceTools', group: 'page-source', name: 'PageSourceTools (Flagship)', description: 'Token-efficient page inspection & smart element discovery', icon: 'Sparkles', color: 'orange' },
-  { id: 'BrowserTools', group: null, name: 'BrowserTools', description: 'Browser lifecycle, attaching to a running browser, navigation, click & sendKeys (always loaded)', icon: 'Compass', color: 'zinc' },
-  { id: 'ElementQueryTools', group: 'elements', name: 'ElementQueryTools', description: 'Element attributes, state checks & size metrics', icon: 'Search', color: 'zinc' },
-  { id: 'WaitTools', group: 'wait', name: 'WaitTools', description: 'Explicit synchronization waits for dynamic DOM states', icon: 'Clock', color: 'zinc' },
+  { id: 'BrowserTools', group: null, name: 'BrowserTools', description: 'Browser lifecycle, multiple named sessions, attaching to a running browser, navigation, click & sendKeys (always loaded)', icon: 'Compass', color: 'zinc' },
+  { id: 'ElementQueryTools', group: 'elements', name: 'ElementQueryTools', description: 'Element attributes, state & clickability checks, size metrics', icon: 'Search', color: 'zinc' },
+  { id: 'WaitTools', group: 'wait', name: 'WaitTools', description: 'Explicit waits, plus the session wait strategy (auto-wait) and wait reports for generated tests', icon: 'Clock', color: 'zinc' },
   { id: 'NetworkTools', group: 'network', name: 'NetworkTools (CDP)', description: 'Passive network capture, request mocking & console logs (Chrome/Edge)', icon: 'Activity', color: 'orange' },
   { id: 'ApiTools', group: 'api', name: 'ApiTools', description: 'Standalone REST client for combined UI + API testing', icon: 'Globe', color: 'orange' },
   { id: 'ActionsTools', group: 'actions', name: 'ActionsTools', description: 'Advanced mouse hovering, drag & drop, keyboard events', icon: 'MousePointer', color: 'zinc' },
@@ -24,9 +24,9 @@ export const ALL_TOOLS = [
     category: "PageSourceTools",
     flagship: true,
     signature: "getPageElementsFiltered(locatorType, locatorValue, includeAncestors?, includeDescendants?, includeSiblings?, maxDepth?, limit?)",
-    description: "Find every element matching a locator (not just the first) and describe each one as JSON, optionally with surrounding context - the tool to reach for when you want a specific kind of element (e.g. every <input>, every element with class 'card') rather than the whole page tree. \n\nExample: locatorType=xpath, locatorValue=//input returns one entry per <input> on the page, each with tag/id/class/name/type/etc. and its own direct text. \n\nBy default only the matched elements themselves are returned. Turn on the extra context you need: \n- includeAncestors=true adds each match's parent chain, immediate parent first up through <html> last. Every node in the chain (and the match itself) gets siblingIndex/siblingCount, e.g. siblingIndex:2, siblingCount:5 means it's the 2nd <div> among 5 sibling <div>s under that same parent. Use this to build a locator that's actually unique, e.g. \"(//form[@id='login']//input)[2]\" or \"div.container > form#login > input:nth-of-type(2)\", instead of guessing and hitting 'multiple elements found'. \n- includeSiblings=true adds the other children of the match's immediate parent, so you can see what else is nearby (e.g. a <label> right before an <input>) without walking the whole ancestor chain. \n- includeDescendants=true expands each match's own children (respecting maxDepth) - only useful when the locator targets a container (e.g. a <form> or <div>) rather than a leaf element like <input>. \n\nResults are capped by limit (default 50); the response always reports totalMatches, returnedMatches, and truncated so you know if more matches exist than were returned.",
+    description: "Find every element matching a locator (not just the first) and describe each one as JSON, optionally with surrounding context - the tool to reach for when you want a specific kind of element (e.g. every <input>, every element with class 'card') rather than the whole page tree. \n\nExample: locatorType=xpath, locatorValue=//input returns one entry per <input> on the page, each with tag/id/class/name/type/etc. and its own direct text. Every match (and any interactive descendant) also gets visible, enabled and clickable (true/false; clickable means displayed, enabled and not covered by another element, which is then named in coveredBy, e.g. a loading overlay). An element outside the viewport gets offscreen:true and no clickable flag, since what covers it isn't known until it is scrolled to - use isClickable for that. \n\nBy default only the matched elements themselves are returned. Turn on the extra context you need: \n- includeAncestors=true adds each match's parent chain, immediate parent first up through <html> last. Every node in the chain (and the match itself) gets siblingIndex/siblingCount, e.g. siblingIndex:2, siblingCount:5 means it's the 2nd <div> among 5 sibling <div>s under that same parent. Use this to build a locator that's actually unique, e.g. \"(//form[@id='login']//input)[2]\" or \"div.container > form#login > input:nth-of-type(2)\", instead of guessing and hitting 'multiple elements found'. \n- includeSiblings=true adds the other children of the match's immediate parent, so you can see what else is nearby (e.g. a <label> right before an <input>) without walking the whole ancestor chain. \n- includeDescendants=true expands each match's own children (respecting maxDepth) - only useful when the locator targets a container (e.g. a <form> or <div>) rather than a leaf element like <input>. \n\nResults are capped by limit (default 50); the response always reports totalMatches, returnedMatches, and truncated so you know if more matches exist than were returned.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)." },
       { name: "locatorValue", type: "string", required: true, desc: "The locator value to match elements against, e.g. //input for xpath or input for css." },
       { name: "includeAncestors", type: "boolean", required: false, desc: "Include each match's ancestor chain (immediate parent first, up to <html> last), with siblingIndex/siblingCount on every node to help build a unique locator. Defaults to false." },
       { name: "includeDescendants", type: "boolean", required: false, desc: "Include each match's own descendant elements (respecting maxDepth). Useful when the locator targets a container rather than a leaf element. Defaults to false." },
@@ -40,7 +40,7 @@ export const ALL_TOOLS = [
     name: "getPageElements",
     category: "PageSourceTools",
     signature: "getPageElements(maxDepth?)",
-    description: "Get the ENTIRE page as a compact JSON element tree rooted at <body>, without scripts, styles, or comments - far cheaper to read than the full HTML source. Each node has tag, any notable attributes present (id, class, name, type, href, src, value, placeholder, role, alt, title, for, target, data-testid, aria-label, aria-hidden, disabled, checked, selected, readonly), text (its own direct text, trimmed and truncated to 120 characters), and children. There is no locator filtering here - it always returns the whole page. If you already know roughly what you're looking for (e.g. all inputs, or one specific element among several), use getPageElementsFiltered instead - it targets matches directly and is much cheaper.",
+    description: "Get the ENTIRE page as a compact JSON element tree rooted at <body>, without scripts, styles, or comments - far cheaper to read than the full HTML source. Each node has tag, any notable attributes present (id, class, name, type, href, src, value, placeholder, role, alt, title, for, target, data-testid, aria-label, aria-hidden, disabled, checked, selected, readonly), text (its own direct text, trimmed and truncated to 120 characters), and children. Interactive nodes (buttons, links, inputs, selects, ARIA buttons, anything with onclick/tabindex) also get visible, enabled and clickable (true/false; clickable means displayed, enabled and not covered by another element, which is then named in coveredBy, e.g. a loading overlay). An element outside the viewport gets offscreen:true and no clickable flag, since what covers it isn't known until it is scrolled to - use isClickable for that. There is no locator filtering here - it always returns the whole page. If you already know roughly what you're looking for (e.g. all inputs, or one specific element among several), use getPageElementsFiltered instead - it targets matches directly and is much cheaper.",
     params: [
       { name: "maxDepth", type: "integer", required: false, desc: "Max tree depth to descend from <body>. Deeper subtrees are reported as childrenTruncated: <count> instead of being expanded. Defaults to 20." }
     ]
@@ -62,42 +62,73 @@ export const ALL_TOOLS = [
   {
     name: "openBrowser",
     category: "BrowserTools",
-    signature: "openBrowser(browser?, headless?, incognito?, windowSize?, userAgent?)",
-    description: "Open a browser window. Must be called before navigate. If a browser is already open, it is reused.",
+    signature: "openBrowser(browser?, headless?, incognito?, windowSize?, userAgent?, implicitWaitSeconds?, networkIdleMillis?, animationIdleMillis?, session?)",
+    description: "Open a browser window. Must be called before navigate. If a browser is already open, it is reused - unless a new session name is given, which opens another browser alongside it.",
     params: [
       { name: "browser", type: "string", required: false, desc: "Browser to launch: chrome, firefox, or edge. Defaults to chrome." },
       { name: "headless", type: "boolean", required: false, desc: "Launch the browser in headless mode. Defaults to false." },
       { name: "incognito", type: "boolean", required: false, desc: "Launch the browser in incognito/private mode. Defaults to false." },
       { name: "windowSize", type: "string", required: false, desc: "Initial window size as WIDTHxHEIGHT, e.g. 1920x1080." },
-      { name: "userAgent", type: "string", required: false, desc: "Custom User-Agent string to launch the browser with." }
+      { name: "userAgent", type: "string", required: false, desc: "Custom User-Agent string to launch the browser with." },
+      { name: "implicitWaitSeconds", type: "integer", required: false, desc: "Wait strategy, to match the framework you are generating tests for: Selenium implicit wait in seconds. Omitted: none, as in plain Selenium. See setAutoWait for all options." },
+      { name: "networkIdleMillis", type: "integer", required: false, desc: "Wait strategy: after each action, wait until no fetch/XHR request has been in flight for this many milliseconds, and report which steps need a network wait in the generated test. Recommended: 500. Omitted: no network wait. See setAutoWait." },
+      { name: "animationIdleMillis", type: "integer", required: false, desc: "Wait strategy: after each action, wait until no animation has run for this many milliseconds, and report which steps need an animation wait in the generated test. Recommended: 300. Omitted: no animation wait. See setAutoWait." },
+      { name: "session", type: "string", required: false, desc: "Name for this browser session (1-32 letters, digits, '-' or '_'). Only needed to run several browsers at once: the first browser is named 'default', and opening another alongside it requires a name. The new session becomes the active one that all tools act on." }
     ]
   },
   {
     name: "connectToBrowser",
     category: "BrowserTools",
-    signature: "connectToBrowser(browser?, debuggerAddress?)",
-    description: "Connect to a Chrome or Edge browser that is already running with remote debugging enabled (started with --remote-debugging-port=<port> and a non-default --user-data-dir), instead of launching a new one. Controls whichever tab is currently active; use the window tools to switch tabs. closeBrowser will disconnect and leave the browser running.",
+    signature: "connectToBrowser(browser?, debuggerAddress?, implicitWaitSeconds?, networkIdleMillis?, animationIdleMillis?, session?)",
+    description: "Connect to a Chrome or Edge browser that is already running with remote debugging enabled (started with --remote-debugging-port=<port> and a non-default --user-data-dir), instead of launching a new one. Controls whichever tab is currently active; use the window tools to switch tabs. closeBrowser will disconnect and leave the browser running. Pass a session name to connect to several debug browsers at once.",
     params: [
       { name: "browser", type: "string", required: false, desc: "Browser that is running: chrome or edge. Defaults to chrome." },
-      { name: "debuggerAddress", type: "string", required: false, desc: "Remote-debugging address as host:port. Defaults to 127.0.0.1:9222." }
+      { name: "debuggerAddress", type: "string", required: false, desc: "Remote-debugging address as host:port. Defaults to 127.0.0.1:9222." },
+      { name: "implicitWaitSeconds", type: "integer", required: false, desc: "Wait strategy, to match the framework you are generating tests for: Selenium implicit wait in seconds. Omitted: none, as in plain Selenium. See setAutoWait for all options." },
+      { name: "networkIdleMillis", type: "integer", required: false, desc: "Wait strategy: after each action, wait until no fetch/XHR request has been in flight for this many milliseconds, and report which steps need a network wait in the generated test. Recommended: 500. Omitted: no network wait. See setAutoWait." },
+      { name: "animationIdleMillis", type: "integer", required: false, desc: "Wait strategy: after each action, wait until no animation has run for this many milliseconds, and report which steps need an animation wait in the generated test. Recommended: 300. Omitted: no animation wait. See setAutoWait." },
+      { name: "session", type: "string", required: false, desc: "Name for this browser session (1-32 letters, digits, '-' or '_'). Only needed to run several browsers at once: the first browser is named 'default', and opening another alongside it requires a name. The new session becomes the active one that all tools act on." }
     ]
   },
   {
     name: "launchDebugBrowser",
     category: "BrowserTools",
-    signature: "launchDebugBrowser(browser?, port?, userDataDir?)",
-    description: "Launch Chrome or Edge with remote debugging enabled and connect to it. Unlike openBrowser, the browser keeps running after closeBrowser, so test code can attach to the same browser via ChromeOptions.setExperimentalOption(\"debuggerAddress\", \"127.0.0.1:<port>\") - e.g. run a failing test up to the failure, then inspect the live page here. The test and this server should take turns rather than drive the browser at the same time. If a browser is already listening on the port, connects to it instead.",
+    signature: "launchDebugBrowser(browser?, port?, userDataDir?, implicitWaitSeconds?, networkIdleMillis?, animationIdleMillis?, session?)",
+    description: "Launch Chrome or Edge with remote debugging enabled and connect to it. Unlike openBrowser, the browser keeps running after closeBrowser, so test code can attach to the same browser via ChromeOptions.setExperimentalOption(\"debuggerAddress\", \"127.0.0.1:<port>\") - e.g. run a failing test up to the failure, then inspect the live page here. The test and this server should take turns rather than drive the browser at the same time. If a browser is already listening on the port, connects to it instead. Pass a session name to run several debug browsers at once; each gets its own port.",
     params: [
       { name: "browser", type: "string", required: false, desc: "Browser to launch: chrome or edge. Defaults to chrome." },
-      { name: "port", type: "integer", required: false, desc: "Remote-debugging port. Defaults to 9222." },
-      { name: "userDataDir", type: "string", required: false, desc: "Profile directory for the browser. Defaults to a dedicated folder under the system temp dir; Chrome refuses remote debugging on your everyday profile." }
+      { name: "port", type: "integer", required: false, desc: "Remote-debugging port. Defaults to 9222, or the next port up that no other session is using." },
+      { name: "userDataDir", type: "string", required: false, desc: "Profile directory for the browser. Defaults to a dedicated folder under the system temp dir; Chrome refuses remote debugging on your everyday profile." },
+      { name: "implicitWaitSeconds", type: "integer", required: false, desc: "Wait strategy, to match the framework you are generating tests for: Selenium implicit wait in seconds. Omitted: none, as in plain Selenium. See setAutoWait for all options." },
+      { name: "networkIdleMillis", type: "integer", required: false, desc: "Wait strategy: after each action, wait until no fetch/XHR request has been in flight for this many milliseconds, and report which steps need a network wait in the generated test. Recommended: 500. Omitted: no network wait. See setAutoWait." },
+      { name: "animationIdleMillis", type: "integer", required: false, desc: "Wait strategy: after each action, wait until no animation has run for this many milliseconds, and report which steps need an animation wait in the generated test. Recommended: 300. Omitted: no animation wait. See setAutoWait." },
+      { name: "session", type: "string", required: false, desc: "Name for this browser session (1-32 letters, digits, '-' or '_'). Only needed to run several browsers at once: the first browser is named 'default', and opening another alongside it requires a name. The new session becomes the active one that all tools act on." }
     ]
   },
   {
     name: "closeBrowser",
     category: "BrowserTools",
-    signature: "closeBrowser()",
-    description: "Close the currently open browser and release the driver. A browser attached via connectToBrowser or launchDebugBrowser is only disconnected and keeps running."
+    signature: "closeBrowser(session?, all?)",
+    description: "Close a browser and release its driver: the active session, the one named, or all of them. A browser attached via connectToBrowser or launchDebugBrowser is only disconnected and keeps running. When the active session closes, the most recently opened remaining one becomes active.",
+    params: [
+      { name: "session", type: "string", required: false, desc: "Name of the session to close. Defaults to the active session." },
+      { name: "all", type: "boolean", required: false, desc: "Close every open session. Defaults to false." }
+    ]
+  },
+  {
+    name: "listSessions",
+    category: "BrowserTools",
+    signature: "listSessions()",
+    description: "List the open browser sessions - name, browser, whether it was launched or attached over a debugging port, and current URL - and which one is active."
+  },
+  {
+    name: "switchSession",
+    category: "BrowserTools",
+    signature: "switchSession(session)",
+    description: "Make another open browser session the active one, so that all tools act on its browser.",
+    params: [
+      { name: "session", type: "string", required: true, desc: "Name of the session to switch to, as shown by listSessions" }
+    ]
   },
   {
     name: "navigate",
@@ -147,13 +178,14 @@ export const ALL_TOOLS = [
   {
     name: "click",
     category: "BrowserTools",
-    signature: "click(locatorType, locatorValue, index?, visibleOnly?)",
-    description: "Click an element on the current page, located by a strategy and value.",
+    signature: "click(locatorType, locatorValue, index?, visibleOnly?, waitIfCoveredSeconds?)",
+    description: "Click an element on the current page, located by a strategy and value. If another element covers it (e.g. a loading overlay), the click is retried until it clears, up to waitIfCoveredSeconds; the result then says so, since the generated test has to wait for that too.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
       { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" },
       { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
-      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
+      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." },
+      { name: "waitIfCoveredSeconds", type: "integer", required: false, desc: "Max seconds to keep retrying while another element (e.g. a loading overlay or spinner) intercepts the click. 0 tries once. Defaults to 5." }
     ]
   },
   {
@@ -162,7 +194,7 @@ export const ALL_TOOLS = [
     signature: "sendKeys(locatorType, locatorValue, text, clearFirst?, index?, visibleOnly?)",
     description: "Send keys (type text) into an element on the current page, located by a strategy and value.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
       { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" },
       { name: "text", type: "string", required: true, desc: "The text to type into the element" },
       { name: "clearFirst", type: "boolean", required: false, desc: "If true, clears the element's existing content before typing. Defaults to false." },
@@ -178,7 +210,7 @@ export const ALL_TOOLS = [
     signature: "getText(locatorType, locatorValue, index?, visibleOnly?)",
     description: "Get the visible text of an element.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
       { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" },
       { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
       { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
@@ -190,7 +222,7 @@ export const ALL_TOOLS = [
     signature: "getAttribute(locatorType, locatorValue, attributeName, index?, visibleOnly?)",
     description: "Get the value of an HTML attribute (or DOM property) of an element.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
       { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" },
       { name: "attributeName", type: "string", required: true, desc: "The attribute name to read, e.g. href, value, class" },
       { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
@@ -200,102 +232,131 @@ export const ALL_TOOLS = [
   {
     name: "getCssValue",
     category: "ElementQueryTools",
-    signature: "getCssValue(locatorType, locatorValue, propertyName)",
+    signature: "getCssValue(locatorType, locatorValue, propertyName, index?, visibleOnly?)",
     description: "Get the computed CSS value of a property of an element.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
       { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" },
-      { name: "propertyName", type: "string", required: true, desc: "The CSS property name, e.g. color, font-size" }
+      { name: "propertyName", type: "string", required: true, desc: "The CSS property name, e.g. color, font-size" },
+      { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
+      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
     ]
   },
   {
     name: "getTagName",
     category: "ElementQueryTools",
-    signature: "getTagName(locatorType, locatorValue)",
+    signature: "getTagName(locatorType, locatorValue, index?, visibleOnly?)",
     description: "Get the HTML tag name of an element.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
-      { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" }
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
+      { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" },
+      { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
+      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
     ]
   },
   {
     name: "isDisplayed",
     category: "ElementQueryTools",
-    signature: "isDisplayed(locatorType, locatorValue)",
+    signature: "isDisplayed(locatorType, locatorValue, index?, visibleOnly?)",
     description: "Check whether an element is displayed (visible) on the page.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
-      { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" }
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
+      { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" },
+      { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
+      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
     ]
   },
   {
     name: "isEnabled",
     category: "ElementQueryTools",
-    signature: "isEnabled(locatorType, locatorValue)",
+    signature: "isEnabled(locatorType, locatorValue, index?, visibleOnly?)",
     description: "Check whether an element is enabled (not disabled).",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
-      { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" }
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
+      { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" },
+      { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
+      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
+    ]
+  },
+  {
+    name: "isClickable",
+    category: "ElementQueryTools",
+    signature: "isClickable(locatorType, locatorValue, index?, visibleOnly?)",
+    description: "Check whether an element can actually be clicked right now: displayed, enabled, and not covered by another element such as a loading overlay. Returns \"true\", or \"false: <reason>\" - e.g. \"false: covered by div.spinner-backdrop\". Scrolls the element into view first if needed, as a click would.",
+    params: [
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
+      { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" },
+      { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
+      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
     ]
   },
   {
     name: "isSelected",
     category: "ElementQueryTools",
-    signature: "isSelected(locatorType, locatorValue)",
+    signature: "isSelected(locatorType, locatorValue, index?, visibleOnly?)",
     description: "Check whether a checkbox, radio button, or option element is selected.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
-      { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" }
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
+      { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" },
+      { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
+      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
     ]
   },
   {
     name: "getElementSize",
     category: "ElementQueryTools",
-    signature: "getElementSize(locatorType, locatorValue)",
+    signature: "getElementSize(locatorType, locatorValue, index?, visibleOnly?)",
     description: "Get the rendered width and height of an element in pixels.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
-      { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" }
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
+      { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" },
+      { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
+      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
     ]
   },
   {
     name: "getElementLocation",
     category: "ElementQueryTools",
-    signature: "getElementLocation(locatorType, locatorValue)",
+    signature: "getElementLocation(locatorType, locatorValue, index?, visibleOnly?)",
     description: "Get the top-left (x, y) position of an element relative to the page.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
-      { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" }
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
+      { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" },
+      { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
+      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
     ]
   },
   {
     name: "elementExists",
     category: "ElementQueryTools",
-    signature: "elementExists(locatorType, locatorValue)",
+    signature: "elementExists(locatorType, locatorValue, visibleOnly?)",
     description: "Check whether at least one element matching the locator exists on the page, without throwing if it doesn't.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
-      { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" }
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
+      { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" },
+      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider matching elements that are currently displayed. Defaults to false." }
     ]
   },
   {
     name: "countElements",
     category: "ElementQueryTools",
-    signature: "countElements(locatorType, locatorValue)",
+    signature: "countElements(locatorType, locatorValue, visibleOnly?)",
     description: "Count how many elements on the page match the locator.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
-      { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the elements" }
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
+      { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the elements" },
+      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider matching elements that are currently displayed. Defaults to false." }
     ]
   },
   {
     name: "getElementsText",
     category: "ElementQueryTools",
-    signature: "getElementsText(locatorType, locatorValue)",
+    signature: "getElementsText(locatorType, locatorValue, visibleOnly?)",
     description: "Get the visible text of every element matching the locator, newline-separated.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
-      { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the elements" }
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
+      { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the elements" },
+      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider matching elements that are currently displayed. Defaults to false." }
     ]
   },
 
@@ -303,57 +364,67 @@ export const ALL_TOOLS = [
   {
     name: "waitForVisible",
     category: "WaitTools",
-    signature: "waitForVisible(locatorType, locatorValue, timeoutSeconds?)",
+    signature: "waitForVisible(locatorType, locatorValue, timeoutSeconds?, index?, visibleOnly?)",
     description: "Wait until an element is visible on the page, up to the given timeout.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
       { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" },
-      { name: "timeoutSeconds", type: "integer", required: false, desc: "Max seconds to wait. Defaults to 10." }
+      { name: "timeoutSeconds", type: "integer", required: false, desc: "Max seconds to wait. Defaults to 10." },
+      { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
+      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
     ]
   },
   {
     name: "waitForClickable",
     category: "WaitTools",
-    signature: "waitForClickable(locatorType, locatorValue, timeoutSeconds?)",
-    description: "Wait until an element is visible and enabled, ready to be clicked, up to the given timeout.",
+    signature: "waitForClickable(locatorType, locatorValue, timeoutSeconds?, index?, visibleOnly?)",
+    description: "Wait until an element is visible, enabled and not covered by another element (e.g. a loading overlay), so a click will reach it, up to the given timeout.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
       { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" },
-      { name: "timeoutSeconds", type: "integer", required: false, desc: "Max seconds to wait. Defaults to 10." }
+      { name: "timeoutSeconds", type: "integer", required: false, desc: "Max seconds to wait. Defaults to 10." },
+      { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
+      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
     ]
   },
   {
     name: "waitForPresent",
     category: "WaitTools",
-    signature: "waitForPresent(locatorType, locatorValue, timeoutSeconds?)",
+    signature: "waitForPresent(locatorType, locatorValue, timeoutSeconds?, index?, visibleOnly?)",
     description: "Wait until an element is present in the DOM (not necessarily visible), up to the given timeout.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
       { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" },
-      { name: "timeoutSeconds", type: "integer", required: false, desc: "Max seconds to wait. Defaults to 10." }
+      { name: "timeoutSeconds", type: "integer", required: false, desc: "Max seconds to wait. Defaults to 10." },
+      { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
+      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
     ]
   },
   {
     name: "waitForInvisible",
     category: "WaitTools",
-    signature: "waitForInvisible(locatorType, locatorValue, timeoutSeconds?)",
+    signature: "waitForInvisible(locatorType, locatorValue, timeoutSeconds?, index?, visibleOnly?)",
     description: "Wait until an element is invisible or removed from the DOM, up to the given timeout.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
       { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" },
-      { name: "timeoutSeconds", type: "integer", required: false, desc: "Max seconds to wait. Defaults to 10." }
+      { name: "timeoutSeconds", type: "integer", required: false, desc: "Max seconds to wait. Defaults to 10." },
+      { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
+      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
     ]
   },
   {
     name: "waitForTextPresent",
     category: "WaitTools",
-    signature: "waitForTextPresent(locatorType, locatorValue, text, timeoutSeconds?)",
+    signature: "waitForTextPresent(locatorType, locatorValue, text, timeoutSeconds?, index?, visibleOnly?)",
     description: "Wait until an element contains the given text, up to the given timeout.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
       { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" },
       { name: "text", type: "string", required: true, desc: "The text expected to appear in the element" },
-      { name: "timeoutSeconds", type: "integer", required: false, desc: "Max seconds to wait. Defaults to 10." }
+      { name: "timeoutSeconds", type: "integer", required: false, desc: "Max seconds to wait. Defaults to 10." },
+      { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
+      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
     ]
   },
   {
@@ -398,26 +469,29 @@ export const ALL_TOOLS = [
   {
     name: "waitForElementCount",
     category: "WaitTools",
-    signature: "waitForElementCount(locatorType, locatorValue, expectedCount, timeoutSeconds?)",
+    signature: "waitForElementCount(locatorType, locatorValue, expectedCount, timeoutSeconds?, visibleOnly?)",
     description: "Wait until the number of elements matching a locator equals an expected count, up to the given timeout.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
       { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the elements" },
       { name: "expectedCount", type: "integer", required: true, desc: "The expected number of matching elements" },
-      { name: "timeoutSeconds", type: "integer", required: false, desc: "Max seconds to wait. Defaults to 10." }
+      { name: "timeoutSeconds", type: "integer", required: false, desc: "Max seconds to wait. Defaults to 10." },
+      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider matching elements that are currently displayed. Defaults to false." }
     ]
   },
   {
     name: "waitForAttributeToBe",
     category: "WaitTools",
-    signature: "waitForAttributeToBe(locatorType, locatorValue, attribute, expectedValue, timeoutSeconds?)",
+    signature: "waitForAttributeToBe(locatorType, locatorValue, attribute, expectedValue, timeoutSeconds?, index?, visibleOnly?)",
     description: "Wait until an element's attribute or DOM property equals an expected value, up to the given timeout.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
       { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" },
       { name: "attribute", type: "string", required: true, desc: "The attribute or DOM property name to check" },
       { name: "expectedValue", type: "string", required: true, desc: "The expected value of the attribute" },
-      { name: "timeoutSeconds", type: "integer", required: false, desc: "Max seconds to wait. Defaults to 10." }
+      { name: "timeoutSeconds", type: "integer", required: false, desc: "Max seconds to wait. Defaults to 10." },
+      { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
+      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
     ]
   },
   {
@@ -429,6 +503,41 @@ export const ALL_TOOLS = [
       { name: "expectedCount", type: "integer", required: true, desc: "The expected number of open windows/tabs" },
       { name: "timeoutSeconds", type: "integer", required: false, desc: "Max seconds to wait. Defaults to 10." }
     ]
+  },
+  {
+    name: "setAutoWait",
+    category: "WaitTools",
+    signature: "setAutoWait(implicitWaitSeconds?, networkIdleMillis?, networkTimeoutSeconds?, animationIdleMillis?, animationTimeoutSeconds?, ignoreUrls?)",
+    description: "Set this browser session's wait strategy to match the framework you are generating Selenium tests for, so a step that passes here also passes in the generated test. By default the session is plain Selenium: no implicit wait, and nothing waited for after actions. implicitWaitSeconds is Selenium's own implicit wait. networkIdleMillis / animationIdleMillis make every action (click, typing, navigation, select, mouse/key actions, upload, alert answers) wait afterwards until no fetch/XHR request has been in flight, then no animation has run, for that long. Each action then reports what it set off and which wait the generated test needs there. Recommended for almost every app: networkIdleMillis=500 and animationIdleMillis=300, so steps that set off requests or animations aren't missed. Every call replaces the whole strategy: omitted values are off, and a call with no arguments restores plain Selenium.",
+    params: [
+      { name: "implicitWaitSeconds", type: "integer", required: false, desc: "Selenium implicit wait in seconds (driver.manage().timeouts().implicitlyWait). Every lookup that finds nothing - elementExists, countElements and waitForInvisible included - then waits this long first, as in Selenium. 0 or omitted: none." },
+      { name: "networkIdleMillis", type: "integer", required: false, desc: "After each action, wait until no fetch/XHR request has been in flight for this many milliseconds, e.g. 500. 0 or omitted: no network wait." },
+      { name: "networkTimeoutSeconds", type: "integer", required: false, desc: "Max seconds the network wait may take before carrying on. Defaults to 10." },
+      { name: "animationIdleMillis", type: "integer", required: false, desc: "After each action (and the network wait), wait until no CSS transition/animation or Web Animation has run for this many milliseconds, e.g. 300. Animations that repeat forever (spinners) are ignored. 0 or omitted: no animation wait." },
+      { name: "animationTimeoutSeconds", type: "integer", required: false, desc: "Max seconds the animation wait may take before carrying on. Defaults to 10." },
+      { name: "ignoreUrls", type: "string", required: false, desc: "Comma-separated URL substrings whose requests don't count as network activity, e.g. google-analytics,/poll,hotjar." }
+    ]
+  },
+  {
+    name: "getAutoWait",
+    category: "WaitTools",
+    signature: "getAutoWait()",
+    description: "Get this browser session's wait strategy (see setAutoWait) and the Java a generated test needs right after creating its driver to match it."
+  },
+  {
+    name: "getWaitReport",
+    category: "WaitTools",
+    signature: "getWaitReport(clear?)",
+    description: "List the steps of this browser session whose generated test code needs a wait, and which one: a click whose target was covered (needs Waits.clickable before it), or an action that set off requests or animations (needs Waits.networkIdle / animationsIdle after it) - however fast they finished here, since they can take seconds in CI. Call before writing the test; see getWaitCodeSnippets for the code.",
+    params: [
+      { name: "clear", type: "boolean", required: false, desc: "Clear the recorded steps after reporting, e.g. before recording another flow. Defaults to false." }
+    ]
+  },
+  {
+    name: "getWaitCodeSnippets",
+    category: "WaitTools",
+    signature: "getWaitCodeSnippets()",
+    description: "Get the Java for waiting in generated Selenium tests the way this session waits: how to use the waits without making tests flaky, the setup lines for right after creating the driver, and a Waits helper class (clickable, networkIdle, animationsIdle, afterAction) that runs the same page checks this server runs. Java 8+, Selenium 4."
   },
 
   // NetworkTools
@@ -669,7 +778,7 @@ export const ALL_TOOLS = [
     signature: "hover(locatorType, locatorValue, index?, visibleOnly?)",
     description: "Move the mouse over an element (hover), e.g. to reveal a dropdown menu.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
       { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" },
       { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
       { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
@@ -681,7 +790,7 @@ export const ALL_TOOLS = [
     signature: "doubleClick(locatorType, locatorValue, index?, visibleOnly?)",
     description: "Double-click the element identified by the given locator in the open browser. Use for controls that react to dblclick, such as editable cells or list items that open on double-click.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
       { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" },
       { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
       { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
@@ -693,7 +802,7 @@ export const ALL_TOOLS = [
     signature: "rightClick(locatorType, locatorValue, index?, visibleOnly?)",
     description: "Right-click (context click) an element.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
       { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" },
       { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
       { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
@@ -702,11 +811,13 @@ export const ALL_TOOLS = [
   {
     name: "clickAndHold",
     category: "ActionsTools",
-    signature: "clickAndHold(locatorType, locatorValue)",
+    signature: "clickAndHold(locatorType, locatorValue, index?, visibleOnly?)",
     description: "Press and hold the left mouse button down on an element. Pair with releaseClick.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
-      { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" }
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
+      { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" },
+      { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
+      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
     ]
   },
   {
@@ -730,13 +841,15 @@ export const ALL_TOOLS = [
   {
     name: "dragAndDropByOffset",
     category: "ActionsTools",
-    signature: "dragAndDropByOffset(locatorType, locatorValue, xOffset, yOffset)",
+    signature: "dragAndDropByOffset(locatorType, locatorValue, xOffset, yOffset, index?, visibleOnly?)",
     description: "Drag an element by a pixel offset instead of onto another element.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
       { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" },
       { name: "xOffset", type: "integer", required: true, desc: "Horizontal pixels to drag by" },
-      { name: "yOffset", type: "integer", required: true, desc: "Vertical pixels to drag by" }
+      { name: "yOffset", type: "integer", required: true, desc: "Vertical pixels to drag by" },
+      { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
+      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
     ]
   },
   {
@@ -806,11 +919,13 @@ export const ALL_TOOLS = [
   {
     name: "switchToFrame",
     category: "FrameTools",
-    signature: "switchToFrame(locatorType, locatorValue)",
+    signature: "switchToFrame(locatorType, locatorValue, index?, visibleOnly?)",
     description: "Switch the driver's focus to a frame/iframe located by a strategy and value.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
-      { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the frame element" }
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
+      { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the frame element" },
+      { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
+      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
     ]
   },
   {
@@ -909,64 +1024,76 @@ export const ALL_TOOLS = [
   {
     name: "selectByVisibleText",
     category: "SelectTools",
-    signature: "selectByVisibleText(locatorType, locatorValue, text)",
+    signature: "selectByVisibleText(locatorType, locatorValue, text, index?, visibleOnly?)",
     description: "Select an option from a dropdown by its visible text.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
       { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the <select> element" },
-      { name: "text", type: "string", required: true, desc: "The visible text of the option to select" }
+      { name: "text", type: "string", required: true, desc: "The visible text of the option to select" },
+      { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
+      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
     ]
   },
   {
     name: "selectByValue",
     category: "SelectTools",
-    signature: "selectByValue(locatorType, locatorValue, optionValue)",
+    signature: "selectByValue(locatorType, locatorValue, optionValue, index?, visibleOnly?)",
     description: "Select an option from a dropdown by its value attribute.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
       { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the <select> element" },
-      { name: "optionValue", type: "string", required: true, desc: "The value attribute of the option to select" }
+      { name: "optionValue", type: "string", required: true, desc: "The value attribute of the option to select" },
+      { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
+      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
     ]
   },
   {
     name: "selectByIndex",
     category: "SelectTools",
-    signature: "selectByIndex(locatorType, locatorValue, index)",
+    signature: "selectByIndex(locatorType, locatorValue, index, elementIndex?, visibleOnly?)",
     description: "Select an option from a dropdown by its zero-based index.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
       { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the <select> element" },
-      { name: "index", type: "integer", required: true, desc: "Zero-based index of the option to select" }
+      { name: "index", type: "integer", required: true, desc: "Zero-based index of the option to select" },
+      { name: "elementIndex", type: "integer", required: false, desc: "Zero-based index of the <select> element to use when the locator matches several. Defaults to the first match." },
+      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
     ]
   },
   {
     name: "deselectAllOptions",
     category: "SelectTools",
-    signature: "deselectAllOptions(locatorType, locatorValue)",
+    signature: "deselectAllOptions(locatorType, locatorValue, index?, visibleOnly?)",
     description: "Deselect all selected options in a multi-select dropdown.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
-      { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the <select> element" }
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
+      { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the <select> element" },
+      { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
+      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
     ]
   },
   {
     name: "getSelectedOptionsText",
     category: "SelectTools",
-    signature: "getSelectedOptionsText(locatorType, locatorValue)",
+    signature: "getSelectedOptionsText(locatorType, locatorValue, index?, visibleOnly?)",
     description: "Get the visible text of the currently selected option(s) in a dropdown.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
-      { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the <select> element" }
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
+      { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the <select> element" },
+      { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
+      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
     ]
   },
   {
     name: "isMultipleSelect",
     category: "SelectTools",
-    signature: "isMultipleSelect(locatorType, locatorValue)",
+    signature: "isMultipleSelect(locatorType, locatorValue, index?, visibleOnly?)",
     description: "Check whether a dropdown allows selecting multiple options.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
-      { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the <select> element" }
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
+      { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the <select> element" },
+      { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
+      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
     ]
   },
 
@@ -1019,9 +1146,9 @@ export const ALL_TOOLS = [
     name: "takeScreenshot",
     category: "ScreenshotTools",
     signature: "takeScreenshot(filePath?, fullPage?)",
-    description: "Take a screenshot of the current page. By default captures only the visible viewport; set fullPage=true to capture the whole scrollable page (Chrome, Edge, Firefox). Content that scrolls inside its own container (not the page) is only captured as far as it is visible. Saves to filePath if given, otherwise returns the image as base64 PNG.",
+    description: "Take a screenshot of the current page. By default captures only the visible viewport; set fullPage=true to capture the whole scrollable page (Chrome, Edge, Firefox). Content that scrolls inside its own container (not the page) is only captured as far as it is visible. Saves to filePath if given, otherwise returns the PNG as an image you can look at directly.",
     params: [
-      { name: "filePath", type: "string", required: false, desc: "Absolute file path to save the PNG to. If omitted, the image is returned as base64." },
+      { name: "filePath", type: "string", required: false, desc: "Absolute file path to save the PNG to. If omitted, the image is returned directly." },
       { name: "fullPage", type: "boolean", required: false, desc: "Capture the entire scrollable page instead of just the viewport. Defaults to false." }
     ]
   },
@@ -1029,11 +1156,11 @@ export const ALL_TOOLS = [
     name: "takeElementScreenshot",
     category: "ScreenshotTools",
     signature: "takeElementScreenshot(locatorType, locatorValue, filePath?, index?, visibleOnly?)",
-    description: "Take a screenshot of a single element. Saves to filePath if given, otherwise returns the image as base64 PNG.",
+    description: "Take a screenshot of a single element. Saves to filePath if given, otherwise returns the PNG as an image you can look at directly.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
       { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" },
-      { name: "filePath", type: "string", required: false, desc: "Absolute file path to save the PNG to. If omitted, the image is returned as base64." },
+      { name: "filePath", type: "string", required: false, desc: "Absolute file path to save the PNG to. If omitted, the image is returned directly." },
       { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
       { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
     ]
@@ -1077,7 +1204,7 @@ export const ALL_TOOLS = [
     signature: "scrollIntoView(locatorType, locatorValue, index?, visibleOnly?)",
     description: "Scroll the page so that an element is in view, located by a strategy and value.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
       { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the element" },
       { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
       { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
@@ -1110,12 +1237,14 @@ export const ALL_TOOLS = [
   {
     name: "uploadFile",
     category: "FileTools",
-    signature: "uploadFile(locatorType, locatorValue, absoluteFilePath)",
+    signature: "uploadFile(locatorType, locatorValue, absoluteFilePath, index?, visibleOnly?)",
     description: "Upload a local file by sending its absolute path to an <input type=\"file\"> element. The file must exist on the machine running the browser.",
     params: [
-      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, or tagName" },
+      { name: "locatorType", type: "string", required: true, desc: "Locator strategy: id, name, css, xpath, className, linkText, partialLinkText, tagName, text (exact visible text, e.g. Create Put), or partialText (visible text contains)" },
       { name: "locatorValue", type: "string", required: true, desc: "The locator value to find the file input element" },
-      { name: "absoluteFilePath", type: "string", required: true, desc: "Absolute path of the local file to upload" }
+      { name: "absoluteFilePath", type: "string", required: true, desc: "Absolute path of the local file to upload" },
+      { name: "index", type: "integer", required: false, desc: "Zero-based index of the match to use when the locator matches several elements. Defaults to the first match." },
+      { name: "visibleOnly", type: "boolean", required: false, desc: "Only consider elements that are currently displayed (applied before index). Defaults to false." }
     ]
   },
   {
@@ -1145,7 +1274,9 @@ export const LOCATOR_STRATEGIES = [
   { key: 'className / class', description: 'Matches element class attribute' },
   { key: 'linkText', description: 'Matches exact visible text of an <a> link tag' },
   { key: 'partialLinkText', description: 'Matches substring of visible text in an <a> link tag' },
-  { key: 'tagName / tag', description: 'Matches HTML tag name (e.g. "button", "h1")' }
+  { key: 'tagName / tag', description: 'Matches HTML tag name (e.g. "button", "h1")' },
+  { key: 'text', description: 'Matches any element by its exact visible text (e.g. "Create Put"), no XPath needed' },
+  { key: 'partialText', description: 'Matches any element whose visible text contains the value' }
 ];
 
 export const COMPARISON_MATRIX = [
@@ -1181,7 +1312,7 @@ export const COMPARISON_MATRIX = [
   },
   {
     feature: 'Install',
-    seleniumMcp: 'npx -y @xpathy/selenium-mcp (Java runtime bundled, drivers auto-managed by WebDriverManager)',
+    seleniumMcp: 'npx -y @voltajeba/selenium-mcp (Java runtime bundled, drivers auto-managed by WebDriverManager)',
     otherSelenium: 'Manual PATH setup required',
     playwrightMcp: 'npx @playwright/mcp@latest'
   }

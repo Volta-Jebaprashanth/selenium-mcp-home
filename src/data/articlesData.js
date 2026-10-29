@@ -9,6 +9,7 @@ import md07 from '../../medium-articles/07-getting-started-claude-code-maven-tut
 import md08 from '../../medium-articles/08-legacy-enterprise-qa-ci-bridge.md?raw';
 import md09 from '../../medium-articles/09-selenium-mcp-ecosystem-comparison-2026.md?raw';
 import md10 from '../../medium-articles/10-waits-flakiness-ai-assisted-debugging.md?raw';
+import md11 from '../../medium-articles/11-attach-ai-agent-to-failing-selenium-test-browser.md?raw';
 
 import cover01 from '../../medium-articles/cover-images-for-articles/1.webp';
 import cover02 from '../../medium-articles/cover-images-for-articles/2.webp';
@@ -135,6 +136,17 @@ const RAW_ARTICLES = [
     excerpt: 'The full WaitTools surface, and how pairing it with CDP-backed network tools lets an agent diagnose the exact race condition behind a flaky test instead of you guessing at sleep values.',
     content: md10,
     cover: cover10,
+  },
+  {
+    slug: 'attach-ai-agent-to-failing-selenium-test-browser',
+    order: 11,
+    date: '2026-10-21',
+    category: 'Tutorial',
+    title: 'I Stopped Reproducing Failed Selenium Tests. Now the AI Debugs Them in the Browser They Failed In',
+    excerpt: 'One small change to your test base keeps the browser alive when a test fails. With launchDebugBrowser, the agent attaches to that exact page and debugs it, instead of you clicking back to step twelve by hand.',
+    content: md11,
+    // No cover image yet; the article pages fall back to a placeholder.
+    cover: null,
   },
 ];
 

@@ -15,7 +15,7 @@ export default function Home() {
   "mcpServers": {
     "selenium-mcp": {
       "command": "npx",
-      "args": ["-y", "@xpathy/selenium-mcp"]
+      "args": ["-y", "@voltajeba/selenium-mcp"]
     }
   }
 }`;

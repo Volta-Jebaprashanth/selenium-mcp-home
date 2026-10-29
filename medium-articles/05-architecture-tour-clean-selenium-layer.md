@@ -8,7 +8,7 @@ That was a hard constraint for me going into **selenium-mcp**: whatever code an 
 
 ## Three layers, deliberately kept apart
 
-```text
+```
 tools/      @McpTool-annotated classes. MCP-facing only.
 webdriver/  Plain-Java Selenium layer. No Spring, no MCP annotations.
 http/       Plain-Java REST client. No Selenium/Spring/MCP dependency at all.

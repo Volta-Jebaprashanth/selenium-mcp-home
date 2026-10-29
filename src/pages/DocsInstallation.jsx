@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import {
-  Download, Terminal, AlertTriangle, Cpu, Globe, Folder, CheckCircle2, Package, Layers, Coffee, Info
+  Download, Terminal, AlertTriangle, Cpu, Globe, Folder, CheckCircle2, Package, Layers, Coffee, Info, AppWindow, Timer
 } from 'lucide-react';
 import CodeBlock from '../components/CodeBlock';
 import { ALL_TOOLS, TOOL_CATEGORIES } from '../data/toolsData';
 
-const NPM_PACKAGE = '@xpathy/selenium-mcp';
+const NPM_PACKAGE = '@voltajeba/selenium-mcp';
+const LEGACY_NPM_PACKAGE = '@xpathy/selenium-mcp';
 const JAR_URL = 'https://github.com/Volta-Jebaprashanth/selenium-mcp/releases/latest/download/selenium-mcp.jar';
 const VSCODE_INSTALL_URL =
-  'https://insiders.vscode.dev/redirect/mcp/install?name=selenium-mcp&config=%7B%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40xpathy%2Fselenium-mcp%22%5D%7D';
+  'https://insiders.vscode.dev/redirect/mcp/install?name=selenium-mcp&config=%7B%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40voltajeba%2Fselenium-mcp%22%5D%7D';
 const CURSOR_INSTALL_URL =
-  'https://cursor.com/en/install-mcp?name=selenium-mcp&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkB4cGF0aHkvc2VsZW5pdW0tbWNwIl19';
+  'https://cursor.com/en/install-mcp?name=selenium-mcp&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkB2b2x0YWplYmEvc2VsZW5pdW0tbWNwIl19';
 
 const CLIENTS = [
   { id: 'claude-code', name: 'Claude Code' },
@@ -229,6 +230,10 @@ export default function DocsInstallation() {
             Supported platforms: Windows x64, Linux x64 (glibc), macOS Intel, macOS Apple Silicon. Logs go to{' '}
             <code className="font-mono bg-zinc-200 dark:bg-zinc-800 px-1 rounded">~/.selenium-mcp/mcp-server.log</code>.
           </p>
+          <p>
+            <code className="font-mono bg-zinc-200 dark:bg-zinc-800 px-1 rounded">{NPM_PACKAGE}</code> was previously published as{' '}
+            <code className="font-mono bg-zinc-200 dark:bg-zinc-800 px-1 rounded">{LEGACY_NPM_PACKAGE}</code>. That name is still released alongside it as an alias, so existing configs keep working.
+          </p>
         </div>
       </section>
 
@@ -305,6 +310,62 @@ export default function DocsInstallation() {
         <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
           You can also allow-list instead, e.g. <code className="font-mono bg-zinc-100 dark:bg-zinc-800 px-1 rounded">--selenium.mcp.tool-groups=elements,page-source,wait,script,screenshots</code>. Any extra arguments after the package name are passed straight through to the server.
         </p>
+      </section>
+
+      {/* Optional: several browsers */}
+      <section className="space-y-4 pt-4 border-t border-zinc-200 dark:border-zinc-800">
+        <h2 className="text-xl font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+          <AppWindow className="w-5 h-5 text-brand-500" /> Running Several Browsers
+        </h2>
+        <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+          One server can drive several browsers at once, e.g. an admin and a customer logged in side by side, or several debug browsers that tests failed in. Each browser is a named <strong>session</strong> with its own cookies, network mocks and console log. Every tool acts on the <strong>active</strong> session, so tool signatures stay the same.
+        </p>
+        <ol className="list-decimal pl-5 space-y-1.5 text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+          <li>The first <code className="font-mono">openBrowser</code> / <code className="font-mono">connectToBrowser</code> / <code className="font-mono">launchDebugBrowser</code> creates the session <code className="font-mono">default</code>.</li>
+          <li>To open another alongside it, pass a <code className="font-mono">session</code> name. The new session becomes active.</li>
+          <li><code className="font-mono">switchSession</code> changes the active session; <code className="font-mono">listSessions</code> shows them all.</li>
+          <li><code className="font-mono">closeBrowser</code> closes the active session (or <code className="font-mono">session: "&lt;name&gt;"</code>, or <code className="font-mono">all: true</code>).</li>
+        </ol>
+        <CodeBlock
+          language="text"
+          code={`openBrowser(session: "admin")
+navigate(url: "https://shop.example.com/admin")
+openBrowser(session: "customer")
+switchSession(session: "admin")`}
+        />
+        <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+          While more than one session is open, results and failures are prefixed with the session name, e.g. <code className="font-mono">[admin] Navigated to ...</code>. At most 5 sessions can be open; raise that with <code className="font-mono bg-zinc-100 dark:bg-zinc-800 px-1 rounded">--selenium.mcp.max-sessions=&lt;n&gt;</code>. All sessions are closed when the server shuts down.
+        </p>
+      </section>
+
+      {/* Optional: wait strategy */}
+      <section className="space-y-4 pt-4 border-t border-zinc-200 dark:border-zinc-800">
+        <h2 className="text-xl font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+          <Timer className="w-5 h-5 text-brand-500" /> Wait Strategy for Generated Tests
+        </h2>
+        <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+          By default a session behaves like plain Selenium: no implicit wait, and nothing waited for after an action, because a step that only passes because the server quietly waited would fail in the generated test. Instead, set the session's wait strategy to match the framework you're generating for, and the server tells the agent exactly which waits the test needs and where.
+        </p>
+        <ul className="list-disc pl-5 space-y-1.5 text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+          <li>
+            <strong className="text-zinc-900 dark:text-white">Set it</strong> when opening the browser (<code className="font-mono">implicitWaitSeconds</code>, <code className="font-mono">networkIdleMillis</code>, <code className="font-mono">animationIdleMillis</code>) or at any point with <code className="font-mono">setAutoWait</code>. Recommended for almost every app: <code className="font-mono">networkIdleMillis=500</code> and <code className="font-mono">animationIdleMillis=300</code>.
+          </li>
+          <li>
+            <strong className="text-zinc-900 dark:text-white">Each action reports what it set off</strong> (requests, animations, a covered click target) and names the wait the generated test needs at that step.
+          </li>
+          <li>
+            <strong className="text-zinc-900 dark:text-white">Failures caused by a missing wait get a hint</strong> saying what the test needs before that step.
+          </li>
+          <li>
+            <strong className="text-zinc-900 dark:text-white">Before writing the test</strong>, <code className="font-mono">getWaitReport</code> lists the steps that need a wait, and <code className="font-mono">getWaitCodeSnippets</code> returns usage rules, driver setup lines and a <code className="font-mono">Waits</code> helper class (Java 11+, Selenium 4).
+          </li>
+        </ul>
+        <CodeBlock
+          language="text"
+          title="Example action result"
+          code={`Clicked element located by id=save
+[auto-wait] This step set off 1 request(s). Waited 820ms for network idle. In the generated test, follow this step with: Waits.networkIdle(driver);`}
+        />
       </section>
 
       {/* Alternative: jar */}

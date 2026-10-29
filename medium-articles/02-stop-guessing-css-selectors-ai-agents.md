@@ -4,7 +4,7 @@
 
 Every Selenium engineer has written this line of debugging output at least once:
 
-```text
+```
 org.openqa.selenium.NoSuchElementException: no such element: Unable to locate element
 ```
 

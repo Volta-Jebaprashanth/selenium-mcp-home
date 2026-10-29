@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { getArticleBySlug, getAdjacentArticles } from '../data/articlesData';
 import ArticleContent, { extractHeadings } from '../components/ArticleContent';
+import ArticleCover from '../components/ArticleCover';
 
 function formatDate(dateStr) {
   return new Date(`${dateStr}T00:00:00`).toLocaleDateString('en-US', {
@@ -131,7 +132,7 @@ export default function ArticleDetail() {
         <article className="min-w-0 max-w-2xl">
           {/* Cover image */}
           <div className="aspect-[16/9] w-full rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 mb-12 bg-zinc-100 dark:bg-zinc-900 shadow-lg">
-            <img src={article.cover} alt="" className="w-full h-full object-cover" />
+            <ArticleCover src={article.cover} />
           </div>
 
           <ArticleContent markdown={article.content} />

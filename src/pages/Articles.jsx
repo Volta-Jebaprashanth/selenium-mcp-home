@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, Clock, ArrowRight, Sparkles, CalendarDays } from 'lucide-react';
 import { ARTICLES, ARTICLE_CATEGORIES } from '../data/articlesData';
+import ArticleCover from '../components/ArticleCover';
 
 function formatDate(dateStr) {
   return new Date(`${dateStr}T00:00:00`).toLocaleDateString('en-US', {
@@ -26,11 +27,10 @@ function ArticleCard({ article }) {
       className="group flex flex-col rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 overflow-hidden hover:border-brand-500/50 hover:-translate-y-1 hover:shadow-glow-orange-sm transition-all duration-200"
     >
       <div className="aspect-[16/9] w-full overflow-hidden bg-zinc-100 dark:bg-zinc-900">
-        <img
+        <ArticleCover
           src={article.cover}
-          alt=""
           loading="lazy"
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          className="group-hover:scale-105 transition-transform duration-300"
         />
       </div>
       <div className="flex flex-col flex-1 p-5 space-y-3">
@@ -128,10 +128,9 @@ export default function Articles() {
           className="group grid grid-cols-1 lg:grid-cols-2 gap-0 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 overflow-hidden hover:border-brand-500/50 transition-all duration-200"
         >
           <div className="aspect-[16/9] lg:aspect-auto overflow-hidden bg-zinc-100 dark:bg-zinc-900 order-1 lg:order-2">
-            <img
+            <ArticleCover
               src={featured.cover}
-              alt=""
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              className="group-hover:scale-105 transition-transform duration-300"
             />
           </div>
           <div className="p-6 sm:p-8 flex flex-col justify-center space-y-4 order-2 lg:order-1">
